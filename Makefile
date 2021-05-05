@@ -1,11 +1,13 @@
-start: _build _test
+start: stop build tests
 
-_build:
+tests: _unit
+
+_unit:
+	docker-compose run --rm phpunit
+
+build:
 	docker-compose pull
 	docker-compose build --pull
-
-_test:
-	docker-compose run --rm phpunit --version
 
 stop:
 	docker-compose down -v --remove-orphans
