@@ -1,0 +1,11 @@
+includes:
+  - vendor/phpstan/phpstan-phpunit/extension.neon
+  - vendor/phpstan/phpstan-phpunit/rules.neon
+parameters:
+    checkGenericClassInNonGenericObjectType: false
+    level: max
+    paths:
+        - src
+        - tests
+    autoload_files:
+        - vendor/autoload.php

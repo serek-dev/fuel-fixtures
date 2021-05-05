@@ -1,9 +1,12 @@
 start: stop build tests
 
-tests: _unit
+tests: _unit _stan
 
 _unit:
 	docker-compose run --rm phpunit
+
+_stan:
+	composer phpstan
 
 build:
 	docker-compose pull
