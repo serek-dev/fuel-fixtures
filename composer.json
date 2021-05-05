@@ -21,13 +21,18 @@
     ],
     "autoload-dev": {
         "psr-4": {
-            "Tests\\": "tests/"
-        }
+            "Tests\\": "tests/",
+            "Stwarog\\FuelFixtures\\": "src/"
+        },
+        "files": ["mock/Mock.php"],
+        "classmap": [
+            "vendor/fuel/orm/"
+        ]
     },
     "extra": {
         "installer-types": ["fuel-package"],
         "installer-paths": {
-            "vendor/{$name}/": [
+            "vendor/fuel/{$name}/": [
                 "type:fuel-package"
             ]
         }

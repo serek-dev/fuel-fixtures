@@ -8,6 +8,7 @@ _unit:
 build:
 	docker-compose pull
 	docker-compose build --pull
+	composer install --ignore-platform-reqs
 
 stop:
 	docker-compose down -v --remove-orphans
