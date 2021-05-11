@@ -1,7 +1,8 @@
 version: '3'
 services:
   composer:
-    image: composer:1.9.3
+    container_name: fuel-fixtures
+    image: composer:2.0.10
     environment:
       - COMPOSER_CACHE_DIR=/app/.cache/composer
     volumes:

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
-use ArrayAccess;
+use Orm\Model;
 use PHPUnit\Framework\TestCase;
 use Stwarog\FuelFixtures\Exceptions\OutOfBound;
 use Stwarog\FuelFixtures\Proxy;
@@ -30,9 +30,7 @@ final class ProxyTest extends TestCase
 
         // Given not existing property
         $property = 'not_existing_property';
-        $offsetExists = false;
-        $model = $this->getMockForAbstractClass(ArrayAccess::class);
-        $model->method('offsetExists')->willReturn($offsetExists);
+        $model = $this->getModel();
         $proxy = new Proxy($model);
 
         // When attempts to get
@@ -48,9 +46,7 @@ final class ProxyTest extends TestCase
 
         // Given not existing property
         $property = 'not_existing_property';
-        $offsetExists = false;
-        $model = $this->getMockForAbstractClass(ArrayAccess::class);
-        $model->method('offsetExists')->willReturn($offsetExists);
+        $model = $this->getModel();
         $proxy = new Proxy($model);
 
         // When attempts to get
@@ -67,10 +63,7 @@ final class ProxyTest extends TestCase
         // Given
         $value = 123;
         $property = 'existing_property';
-        $offsetExists = true;
-        $model = $this->getMockForAbstractClass(ArrayAccess::class);
-        $model->method('offsetExists')->willReturn($offsetExists);
-        $model->method('offsetGet')->willReturn($value);
+        $model = $this->getModel([$property => $value]);
         $proxy = new Proxy($model);
 
         // When property is defined & Then returns value
@@ -94,44 +87,12 @@ final class ProxyTest extends TestCase
         $this->assertSame($value, $actual);
     }
 
-    private function getModel(): ArrayAccess
+    private function getModel(array $data = []): Model
     {
-        return new class implements ArrayAccess {
-
-            /**
-             * @param mixed $offset
-             * @return false
-             */
-            public function offsetExists($offset)
-            {
-                return false;
-            }
-
-            /**
-             * @param mixed $offset
-             * @return mixed
-             */
-            public function offsetGet($offset)
-            {
-                return null;
-            }
-
-            /**
-             * @param mixed $offset
-             * @param mixed $value
-             */
-            public function offsetSet($offset, $value)
-            {
-                // TODO: Implement offsetSet() method.
-            }
-
-            /**
-             * @param mixed $offset
-             */
-            public function offsetUnset($offset)
-            {
-                // TODO: Implement offsetUnset() method.
-            }
+        $class = new class extends Model {
+            protected static $_properties = ['id', 'existing_property'];
         };
+
+        return new $class($data);
     }
 }

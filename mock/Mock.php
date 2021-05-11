@@ -1,5 +1,7 @@
 <?php
 
+# ugly trick to resolve issue with "not normal" fuel's loader
+
 if (!interface_exists('Sanitization')) {
     interface Sanitization {}
 }

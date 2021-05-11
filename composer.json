@@ -9,7 +9,6 @@
         "phpunit/phpunit": "^9.5",
         "stwarog/uow-fuel": "^1.1.5",
         "fuel/orm": "^1.8",
-        "fuel/fuel": "^1.8",
         "fuel/core": "^1.8",
         "phpstan/phpstan": "^0.12.85",
         "phpstan/phpstan-phpunit": "^0.12.18"
