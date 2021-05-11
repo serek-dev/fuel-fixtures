@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Tests\Unit;
@@ -8,7 +9,8 @@ use PHPUnit\Framework\TestCase;
 use Stwarog\FuelFixtures\Exceptions\OutOfBound;
 use Stwarog\FuelFixtures\Proxy;
 
-class ProxyTest extends TestCase
+/** @covers \Stwarog\FuelFixtures\Proxy */
+final class ProxyTest extends TestCase
 {
     /** @test */
     public function constructor(): void
@@ -26,14 +28,15 @@ class ProxyTest extends TestCase
         // Expect
         $this->expectException(OutOfBound::class);
 
-        // Given
+        // Given not existing property
         $property = 'not_existing_property';
         $offsetExists = false;
         $model = $this->getMockForAbstractClass(ArrayAccess::class);
         $model->method('offsetExists')->willReturn($offsetExists);
         $proxy = new Proxy($model);
 
-        // When property is not defined
+        // When attempts to get
+        /** @phpstan-ignore-next-line */
         $proxy->$property;
     }
 
@@ -43,20 +46,21 @@ class ProxyTest extends TestCase
         // Expect
         $this->expectException(OutOfBound::class);
 
-        // Given
+        // Given not existing property
         $property = 'not_existing_property';
         $offsetExists = false;
         $model = $this->getMockForAbstractClass(ArrayAccess::class);
         $model->method('offsetExists')->willReturn($offsetExists);
         $proxy = new Proxy($model);
 
-        // When property is not defined
+        // When attempts to get
+        /** @phpstan-ignore-next-line */
         $proxy[$property];
     }
 
     /**
      * @test
-     * @return array<Proxy, string, mixed>
+     * @return array{Proxy, string, mixed}
      */
     public function getPropertyByArrayAccess_propertyExists(): array
     {
@@ -78,7 +82,7 @@ class ProxyTest extends TestCase
 
     /**
      * @test
-     * @param array<Proxy, string, mixed> $stack
+     * @param array{Proxy, string, mixed} $stack
      * @depends getPropertyByArrayAccess_propertyExists
      */
     public function getPropertyByMagicMethod_propertyExists(array $stack): void
@@ -94,21 +98,36 @@ class ProxyTest extends TestCase
     {
         return new class implements ArrayAccess {
 
+            /**
+             * @param mixed $offset
+             * @return false
+             */
             public function offsetExists($offset)
             {
                 return false;
             }
 
+            /**
+             * @param mixed $offset
+             * @return mixed
+             */
             public function offsetGet($offset)
             {
                 return null;
             }
 
+            /**
+             * @param mixed $offset
+             * @param mixed $value
+             */
             public function offsetSet($offset, $value)
             {
                 // TODO: Implement offsetSet() method.
             }
 
+            /**
+             * @param mixed $offset
+             */
             public function offsetUnset($offset)
             {
                 // TODO: Implement offsetUnset() method.

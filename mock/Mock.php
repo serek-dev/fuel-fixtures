@@ -1,14 +1,19 @@
 <?php
 
-
-interface Sanitization {}
-
-class Db {
-    public static function list_columns() {}
+if (!interface_exists('Sanitization')) {
+    interface Sanitization {}
 }
 
-class Inflector {
-    public static function tableize() {
-        return [];
+if (!class_exists('Db')) {
+    class Db {
+        public static function list_columns() {}
+    }
+}
+
+if (!class_exists('Inflector')) {
+    class Inflector {
+        public static function tableize() {
+            return [];
+        }
     }
 }

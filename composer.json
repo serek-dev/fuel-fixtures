@@ -40,6 +40,8 @@
         }
     },
     "scripts": {
+        "phpunit": "./vendor/bin/phpunit",
+        "tests:unit": "@phpunit -c tests/unit.xml",
         "phpstan": "php -d memory_limit=400M vendor/bin/phpstan analyse -c phpstan.neon --level=max"
     },
     "minimum-stability": "stable"

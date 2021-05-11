@@ -1,12 +1,10 @@
 <?php
-declare(strict_types=1);
 
+declare(strict_types=1);
 
 namespace Stwarog\FuelFixtures\Exceptions;
 
-
 use OutOfBoundsException;
-use Throwable;
 
 class OutOfBound extends OutOfBoundsException
 {

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Stwarog\FuelFixtures;
@@ -19,7 +20,7 @@ final class Proxy extends Model implements ArrayAccess
     /**
      * Fetch a property or relation
      *
-     * @param   string
+     * @param   string $property
      * @return  mixed
      */
     public function & __get($property)
@@ -32,11 +33,19 @@ final class Proxy extends Model implements ArrayAccess
         return $value;
     }
 
+    /**
+     * @param string|int $offset
+     * @return bool
+     */
     public function offsetExists($offset): bool
     {
         return $this->model->offsetExists($offset);
     }
 
+    /**
+     * @param string|int $offset
+     * @return mixed
+     */
     public function offsetGet($offset)
     {
         return $this->$offset;
