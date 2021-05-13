@@ -1,11 +1,11 @@
 start: stop build tests
 
-tests: _unit _stan
+tests: stop unit stan
 
-_unit:
+unit:
 	docker-compose run --rm composer tests:unit
 
-_stan:
+stan:
 	composer phpstan
 
 build:

@@ -87,9 +87,14 @@ final class ProxyTest extends TestCase
         $this->assertSame($value, $actual);
     }
 
+    /**
+     * @param array<string, int> $data
+     * @return Model<mixed>
+     */
     private function getModel(array $data = []): Model
     {
         $class = new class extends Model {
+            /** @phpstan-ignore-next-line */
             protected static $_properties = ['id', 'existing_property'];
         };
 
