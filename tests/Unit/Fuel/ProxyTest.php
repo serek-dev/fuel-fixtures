@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit;
+namespace Tests\Unit\Fuel;
 
 use Orm\Model;
 use PHPUnit\Framework\TestCase;
 use Stwarog\FuelFixtures\Exceptions\OutOfBound;
-use Stwarog\FuelFixtures\Proxy;
+use Stwarog\FuelFixtures\Fuel\Proxy;
 
-/** @covers \Stwarog\FuelFixtures\Proxy */
+/** @covers \Stwarog\FuelFixtures\Fuel\Proxy */
 final class ProxyTest extends TestCase
 {
     /** @test */

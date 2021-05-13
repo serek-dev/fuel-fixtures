@@ -2,13 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Stwarog\FuelFixtures;
+namespace Stwarog\FuelFixtures\Fuel;
 
 use ArrayAccess;
 use Orm\Model;
 use Stwarog\FuelFixtures\Exceptions\OutOfBound;
+use Stwarog\FuelFixtures\ProxyContract;
 
-final class Proxy extends Model implements ArrayAccess
+final class Proxy extends Model implements ProxyContract
 {
     private ArrayAccess $model;
 
