@@ -4,8 +4,6 @@
     "type": "library",
     "require": {
         "php": "7.4",
-        "fuel/orm": "^1.8",
-        "fuel/core": "^1.8",
         "stwarog/uow-fuel": "^1.1.5"
     },
     "require-dev": {
@@ -23,17 +21,15 @@
     "autoload": {
         "psr-4": {
             "Stwarog\\FuelFixtures\\": "src/"
-        },
-        "files": ["mock/Mock.php"],
-        "classmap": [
-            "vendor/fuel/core/",
-            "vendor/fuel/orm/"
-        ]
+        }
     },
     "autoload-dev": {
         "psr-4": {
             "Tests\\": "tests/"
-        }
+        },
+        "files": [
+            "mock/Mock.php"
+        ]
     },
     "extra": {
         "installer-types": ["fuel-package"],

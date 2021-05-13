@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Stwarog\FuelFixtures\Fuel;
 
 use ArrayAccess;
+use ErrorException;
 use Orm\Model;
 use Stwarog\FuelFixtures\Exceptions\OutOfBound;
 use Stwarog\FuelFixtures\ProxyContract;
@@ -13,8 +14,13 @@ final class Proxy extends Model implements ProxyContract
 {
     private ArrayAccess $model;
 
-    public function __construct(ArrayAccess $model)
+    /**
+     * @param Model<mixed> $model
+     * @throws ErrorException
+     */
+    public function __construct(Model $model)
     {
+        parent::__construct($model->to_array());
         $this->model = $model;
     }
 
