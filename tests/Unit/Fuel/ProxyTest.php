@@ -6,7 +6,6 @@ namespace Tests\Unit\Fuel;
 
 use Orm\Model;
 use PHPUnit\Framework\TestCase;
-use Stwarog\FuelFixtures\Exceptions\OutOfBound;
 use Stwarog\FuelFixtures\Fuel\Proxy;
 
 /** @covers \Stwarog\FuelFixtures\Fuel\Proxy */
@@ -20,38 +19,6 @@ final class ProxyTest extends TestCase
         $proxy = new Proxy($model);
 
         $this->assertInstanceOf(Proxy::class, $proxy);
-    }
-
-    /** @test */
-    public function getPropertyByMagicMethod_propertyNotExists_throwsException(): void
-    {
-        // Expect
-        $this->expectException(OutOfBound::class);
-
-        // Given not existing property
-        $property = 'not_existing_property';
-        $model = $this->getModel();
-        $proxy = new Proxy($model);
-
-        // When attempts to get
-        /** @phpstan-ignore-next-line */
-        $proxy->$property;
-    }
-
-    /** @test */
-    public function getPropertyByArrayAccess_propertyNotExists_throwsException(): void
-    {
-        // Expect
-        $this->expectException(OutOfBound::class);
-
-        // Given not existing property
-        $property = 'not_existing_property';
-        $model = $this->getModel();
-        $proxy = new Proxy($model);
-
-        // When attempts to get
-        /** @phpstan-ignore-next-line */
-        $proxy[$property];
     }
 
     /**

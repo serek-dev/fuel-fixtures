@@ -7,10 +7,8 @@ namespace Stwarog\FuelFixtures\Fuel;
 use ArrayAccess;
 use ErrorException;
 use Orm\Model;
-use Stwarog\FuelFixtures\Exceptions\OutOfBound;
-use Stwarog\FuelFixtures\ProxyContract;
 
-final class Proxy extends Model implements ProxyContract
+final class Proxy extends Model
 {
     private ArrayAccess $model;
 
@@ -32,10 +30,6 @@ final class Proxy extends Model implements ProxyContract
      */
     public function & __get($property)
     {
-        if (!$this->model->offsetExists($property)) {
-            throw OutOfBound::create($property);
-        }
-
         $value = $this->model->offsetGet($property);
         return $value;
     }

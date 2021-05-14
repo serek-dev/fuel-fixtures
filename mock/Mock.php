@@ -64,5 +64,10 @@ if (!class_exists('Orm\Model')) {
         {
             return $this->_data;
         }
+
+        public function save($cascade = null, $use_transaction = false)
+        {
+
+        }
     }
 }
