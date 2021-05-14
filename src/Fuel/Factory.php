@@ -4,26 +4,19 @@ declare(strict_types=1);
 
 namespace Stwarog\FuelFixtures\Fuel;
 
-use ErrorException;
-use Exception;
-
-class Factory implements FactoryContract
+abstract class Factory implements FactoryContract
 {
     private string $class;
 
-    private PersistenceContract $persistence;
+    protected PersistenceContract $persistence;
 
-    public function __construct(string $class, ?PersistenceContract $persistence = null)
+    protected function __construct(string $class, ?PersistenceContract $persistence = null)
     {
         $this->class = $class;
         $this->persistence = $persistence ?? new FuelPersistence();
     }
 
-    /**
-     * @param array<string, mixed> $attributes
-     * @return Proxy<array>
-     * @throws Exception
-     */
+    /** @inheritDoc */
     public function createOne(array $attributes = []): Proxy
     {
         $model = $this->makeOne($attributes);
@@ -33,11 +26,7 @@ class Factory implements FactoryContract
         return $model;
     }
 
-    /**
-     * @param array<string, mixed> $attributes
-     * @return Proxy<array>
-     * @throws ErrorException
-     */
+    /** @inheritDoc */
     public function makeOne(array $attributes = []): Proxy
     {
         $attributes = array_merge($this->getDefaults(), $attributes);
@@ -47,20 +36,7 @@ class Factory implements FactoryContract
         );
     }
 
-    /**
-     * @return array<string, mixed>
-     */
-    public function getDefaults(): array
-    {
-        return [];
-    }
-
-    /**
-     * @param array<string, mixed> $attributes
-     * @param int $count
-     * @return array<Proxy>
-     * @throws ErrorException
-     */
+    /** @inheritDoc */
     public function createMany(array $attributes = [], int $count = 5): array
     {
         $models = $this->makeMany($attributes, $count);
@@ -70,12 +46,7 @@ class Factory implements FactoryContract
         return $models;
     }
 
-    /**
-     * @param array<string, mixed> $attributes
-     * @param int $count
-     * @return array<Proxy>
-     * @throws ErrorException
-     */
+    /** @inheritDoc */
     public function makeMany(array $attributes = [], int $count = 5): array
     {
         return array_map(fn() => $this->makeOne($attributes), range(0, $count));
