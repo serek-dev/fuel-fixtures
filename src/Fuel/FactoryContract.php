@@ -9,30 +9,30 @@ use Stwarog\FuelFixtures\Exceptions\StateNotFound;
 interface FactoryContract
 {
     /**
-     * @return array<string, mixed>
+     * @return array
      */
     public function getDefaults(): array;
 
     /**
-     * @param array<string, mixed> $attributes
+     * @param array<mixed> $attributes
      * @return Proxy<array>
      */
     public function makeOne(array $attributes = []): Proxy;
 
     /**
-     * @param array<string, mixed> $attributes
+     * @param array{?string, ?mixed}[]|array[] $attributes
      * @return array<Proxy>
      */
     public function makeMany(array $attributes = [], int $count = 5): array;
 
     /**
-     * @param array<string, mixed> $attributes
+     * @param array<mixed> $attributes
      * @return Proxy<array>
      */
     public function createOne(array $attributes = []): Proxy;
 
     /**
-     * @param array<string, mixed> $attributes
+     * @param array<mixed> $attributes
      * @return array<Proxy>
      */
     public function createMany(array $attributes = [], int $count = 5): array;

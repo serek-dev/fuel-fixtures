@@ -10,10 +10,26 @@ abstract class Factory implements FactoryContract
 
     protected PersistenceContract $persistence;
 
-    protected function __construct(string $class, ?PersistenceContract $persistence = null)
+    public function __construct(string $class, ?PersistenceContract $persistence = null)
     {
         $this->class = $class;
         $this->persistence = $persistence ?? new FuelPersistence();
+    }
+
+    /** @inheritDoc */
+    public function makeOne(array $attributes = []): Proxy
+    {
+        $attributes = array_merge($this->getDefaults(), $attributes);
+
+        return new Proxy(
+            new $this->class($attributes)
+        );
+    }
+
+    /** @inheritDoc */
+    public function makeMany(array $attributes = [], int $count = 5): array
+    {
+        return array_map(fn() => $this->makeOne($attributes), range(1, $count));
     }
 
     /** @inheritDoc */
@@ -27,16 +43,6 @@ abstract class Factory implements FactoryContract
     }
 
     /** @inheritDoc */
-    public function makeOne(array $attributes = []): Proxy
-    {
-        $attributes = array_merge($this->getDefaults(), $attributes);
-
-        return new Proxy(
-            new ${$this->class}($attributes)
-        );
-    }
-
-    /** @inheritDoc */
     public function createMany(array $attributes = [], int $count = 5): array
     {
         $models = $this->makeMany($attributes, $count);
@@ -44,12 +50,6 @@ abstract class Factory implements FactoryContract
         $this->persistence->persist(...$models);
 
         return $models;
-    }
-
-    /** @inheritDoc */
-    public function makeMany(array $attributes = [], int $count = 5): array
-    {
-        return array_map(fn() => $this->makeOne($attributes), range(0, $count));
     }
 
     /** @inerhitDoc */
