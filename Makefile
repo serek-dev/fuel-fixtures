@@ -1,12 +1,17 @@
 start: stop build tests
 
-tests: stop unit stan
+check: cs stan unit
 
 unit:
 	docker-compose run --rm composer tests:unit
 
 stan:
-	composer phpstan
+		docker-compose run --rm composer phpstan
+
+cs:
+		docker-compose run --rm composer phpcs
+cs_fix:
+		docker-compose run --rm composer phpcs:fix
 
 build:
 	docker-compose pull
