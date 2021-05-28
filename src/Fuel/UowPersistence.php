@@ -8,7 +8,7 @@ use Exception;
 use Orm\Model;
 use Stwarog\UowFuel\FuelEntityManager;
 
-class UowPersistence implements PersistenceContract
+final class UowPersistence implements PersistenceContract
 {
     private FuelEntityManager $em;
 

@@ -7,7 +7,7 @@ namespace Stwarog\FuelFixtures\Fuel;
 use Exception;
 use Orm\Model;
 
-class FuelPersistence implements PersistenceContract
+final class FuelPersistence implements PersistenceContract
 {
     /**
      * @param Model<array> ...$models

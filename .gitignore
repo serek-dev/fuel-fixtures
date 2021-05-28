@@ -3,4 +3,4 @@
 ./.cache
 ./.phpunit.cache
 fuel
-.cache
+*.cache
