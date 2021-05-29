@@ -48,4 +48,15 @@ interface FactoryContract
      * @throws StateNotFound
      */
     public function with(string $state): self;
+
+    /**
+     * The class we are creating factory for
+     * @return string
+     */
+    public static function getClass(): string;
+
+    /**
+     * @return static
+     */
+    public static function initialize(?PersistenceContract $persistence = null): self;
 }

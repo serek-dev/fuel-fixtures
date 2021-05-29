@@ -12,8 +12,16 @@ abstract class Factory implements FactoryContract
 
     public function __construct(string $class, ?PersistenceContract $persistence = null)
     {
-        $this->class = $class;
+        $this->class = $class ?? $this->getClass();
         $this->persistence = $persistence ?? new FuelPersistence();
+    }
+
+    /**
+     * @return static|self
+     */
+    public static function initialize(?PersistenceContract $persistence = null): self
+    {
+        return new static(static::getClass(), $persistence);
     }
 
     /** @inheritDoc */

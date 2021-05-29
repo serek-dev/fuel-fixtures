@@ -37,6 +37,11 @@ final class FactoryTest extends TestCase
                     'body' => 'body',
                 ];
             }
+
+            public static function getClass(): string
+            {
+                return ModelImitation::class;
+            }
         };
     }
 
