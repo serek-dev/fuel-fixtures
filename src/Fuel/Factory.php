@@ -8,13 +8,10 @@ use Orm\Model;
 
 abstract class Factory implements FactoryContract
 {
-    private string $class;
-
     protected PersistenceContract $persistence;
 
-    public function __construct(string $class, ?PersistenceContract $persistence = null)
+    public function __construct(?PersistenceContract $persistence = null)
     {
-        $this->class = $class ?? $this->getClass();
         $this->persistence = $persistence ?? new FuelPersistence();
     }
 
@@ -23,15 +20,16 @@ abstract class Factory implements FactoryContract
      */
     public static function initialize(?PersistenceContract $persistence = null): self
     {
-        return new static(static::getClass(), $persistence);
+        return new static($persistence);
     }
 
     /** @inheritDoc */
     public function makeOne(array $attributes = []): Model
     {
         $attributes = array_merge($this->getDefaults(), $attributes);
+        $class = static::getClass();
 
-        return new $this->class($attributes);
+        return new $class($attributes);
     }
 
     /** @inheritDoc */
