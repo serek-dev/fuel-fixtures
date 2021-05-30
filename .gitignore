@@ -4,3 +4,4 @@
 ./.phpunit.cache
 fuel
 *.cache
+tests/.phpunit.result.cache
