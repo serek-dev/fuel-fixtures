@@ -4,36 +4,39 @@ declare(strict_types=1);
 
 namespace Stwarog\FuelFixtures\Fuel;
 
+use Orm\Model;
 use Stwarog\FuelFixtures\Exceptions\StateNotFound;
 
 interface FactoryContract
 {
+    public function __construct(string $class, ?PersistenceContract $persistence = null);
+
     /**
      * @return array
      */
     public function getDefaults(): array;
 
     /**
-     * @param array<mixed> $attributes
-     * @return Proxy<array>
+     * @param array<string, mixed> $attributes
+     * @return Model<array>
      */
-    public function makeOne(array $attributes = []): Proxy;
+    public function makeOne(array $attributes = []): Model;
 
     /**
      * @param array{?string, ?mixed}[]|array[] $attributes
-     * @return array<Proxy>
+     * @return array<Model>
      */
     public function makeMany(array $attributes = [], int $count = 5): array;
 
     /**
-     * @param array<mixed> $attributes
-     * @return Proxy<array>
+     * @param array<string, mixed> $attributes
+     * @return Model<array>
      */
-    public function createOne(array $attributes = []): Proxy;
+    public function createOne(array $attributes = []): Model;
 
     /**
-     * @param array<mixed> $attributes
-     * @return array<Proxy>
+     * @param array<array<string, mixed>> $attributes
+     * @return array<Model>
      */
     public function createMany(array $attributes = [], int $count = 5): array;
 

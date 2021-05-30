@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Stwarog\FuelFixtures\Fuel;
 
+use Orm\Model;
+
 abstract class Factory implements FactoryContract
 {
     private string $class;
@@ -25,13 +27,11 @@ abstract class Factory implements FactoryContract
     }
 
     /** @inheritDoc */
-    public function makeOne(array $attributes = []): Proxy
+    public function makeOne(array $attributes = []): Model
     {
         $attributes = array_merge($this->getDefaults(), $attributes);
 
-        return new Proxy(
-            new $this->class($attributes)
-        );
+        return new $this->class($attributes);
     }
 
     /** @inheritDoc */
@@ -41,7 +41,7 @@ abstract class Factory implements FactoryContract
     }
 
     /** @inheritDoc */
-    public function createOne(array $attributes = []): Proxy
+    public function createOne(array $attributes = []): Model
     {
         $model = $this->makeOne($attributes);
 
