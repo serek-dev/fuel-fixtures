@@ -4,15 +4,18 @@ declare(strict_types=1);
 
 namespace Stwarog\FuelFixtures\Fuel;
 
+use Faker\Generator;
 use Orm\Model;
 
 abstract class Factory implements FactoryContract
 {
     protected PersistenceContract $persistence;
+    protected ?Generator $faker;
 
-    public function __construct(?PersistenceContract $persistence = null)
+    public function __construct(?PersistenceContract $persistence = null, ?Generator $faker = null)
     {
         $this->persistence = $persistence ?? new FuelPersistence();
+        $this->faker = $faker ?? \Faker\Factory::create();
     }
 
     /**
@@ -73,5 +76,10 @@ abstract class Factory implements FactoryContract
     public function setPersistence(PersistenceContract $strategy): void
     {
         $this->persistence = $strategy;
+    }
+
+    public function setFaker(Generator $faker): void
+    {
+        $this->faker = $faker;
     }
 }

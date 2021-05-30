@@ -305,4 +305,39 @@ final class FactoryTest extends TestCase
         // Then count should be = 2
         $this->assertCount($expected, $models);
     }
+//
+//    /** @test */
+//    public function setFaker_ShouldUseGivenFaker(): void
+//    {
+//        // When given factory
+//        $factory = new class() extends Factory {
+//
+//            public function __construct(?PersistenceContract $persistence = null, ?\Faker\Generator $faker = null)
+//            {
+//                parent::__construct($persistence, $faker);
+//            }
+//
+//            public function getDefaults(): array
+//            {
+//                return [
+//                    'field' => $this->faker->name
+//                ];
+//            }
+//
+//            public static function getClass(): string
+//            {
+//                return ModelImitation::class;
+//            }
+//        };
+//
+//        // With custom faker
+//        $faker = \Faker\Factory::create('Pl_pl');
+//
+//        // When custom faker is set
+//        $factory->setFaker($faker);
+//
+//        // When makeOne is called
+//        // Then given faker should be used
+//        $factory->makeOne();
+//    }
 }
