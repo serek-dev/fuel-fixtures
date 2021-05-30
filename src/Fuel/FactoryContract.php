@@ -9,7 +9,7 @@ use Stwarog\FuelFixtures\Exceptions\StateNotFound;
 
 interface FactoryContract
 {
-    public function __construct(string $class, ?PersistenceContract $persistence = null);
+    public function __construct(?PersistenceContract $persistence = null);
 
     /**
      * @return array
