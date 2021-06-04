@@ -8,10 +8,10 @@ use OutOfBoundsException;
 
 class OutOfBound extends OutOfBoundsException
 {
-    public static function create(string $property): self
+    public static function create(string $state): self
     {
         return new self(
-            "Attempted to reach '$property' but it does not exists"
+            "Attempted to reach '$state' but it does not exists"
         );
     }
 }

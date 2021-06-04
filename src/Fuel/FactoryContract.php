@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Stwarog\FuelFixtures\Fuel;
 
+use Closure;
+use Faker\Generator;
 use Orm\Model;
 use Stwarog\FuelFixtures\Exceptions\StateNotFound;
 
@@ -41,7 +43,7 @@ interface FactoryContract
     public function createMany(array $attributes = [], int $count = 5): array;
 
     /**
-     * @return array<string, string>
+     * @return array<string, Closure>
      */
     public function getStates(): array;
 
@@ -61,5 +63,5 @@ interface FactoryContract
     /**
      * @return static
      */
-    public static function initialize(?PersistenceContract $persistence = null): self;
+    public static function initialize(?PersistenceContract $persistence = null, ?Generator $faker = null): self;
 }

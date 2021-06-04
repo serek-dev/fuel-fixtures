@@ -4,13 +4,18 @@ declare(strict_types=1);
 
 namespace Stwarog\FuelFixtures\Fuel;
 
+use Countable;
 use Faker\Generator;
 use Orm\Model;
+use Stwarog\FuelFixtures\Exceptions\OutOfBound;
 
-abstract class Factory implements FactoryContract
+abstract class Factory implements FactoryContract, Countable
 {
     protected PersistenceContract $persistence;
     protected ?Generator $faker;
+
+    /** @var array<string, string> */
+    private array $usedStates = [];
 
     public function __construct(?PersistenceContract $persistence = null, ?Generator $faker = null)
     {
@@ -21,9 +26,9 @@ abstract class Factory implements FactoryContract
     /**
      * @return static|self
      */
-    public static function initialize(?PersistenceContract $persistence = null): self
+    public static function initialize(?PersistenceContract $persistence = null, ?Generator $faker = null): self
     {
-        return new static($persistence);
+        return new static($persistence, $faker);
     }
 
     /** @inheritDoc */
@@ -32,7 +37,14 @@ abstract class Factory implements FactoryContract
         $attributes = array_merge($this->getDefaults(), $attributes);
         $class = static::getClass();
 
-        return new $class($attributes);
+        $model = new $class($attributes);
+
+        // apply all closures
+        foreach ($this->usedStates as $stateName) {
+            $this->getStates()[$stateName]($model);
+        }
+
+        return $model;
     }
 
     /** @inheritDoc */
@@ -70,6 +82,12 @@ abstract class Factory implements FactoryContract
     /** @inerhitDoc */
     public function with(string $state): FactoryContract
     {
+        if (!isset($this->getStates()[$state])) {
+            throw OutOfBound::create($state);
+        }
+
+        $this->usedStates[$state] = $state;
+
         return $this;
     }
 
@@ -81,5 +99,10 @@ abstract class Factory implements FactoryContract
     public function setFaker(Generator $faker): void
     {
         $this->faker = $faker;
+    }
+
+    public function count(): int
+    {
+        return count($this->usedStates);
     }
 }
