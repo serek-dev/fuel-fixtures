@@ -47,7 +47,7 @@ final class FactoryTest extends TestCase
             public function getStates(): array
             {
                 return [
-                    'fake' => function () {
+                    'fake' => static function () {
                     },
                 ];
             }

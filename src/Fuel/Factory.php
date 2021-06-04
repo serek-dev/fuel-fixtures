@@ -80,13 +80,15 @@ abstract class Factory implements FactoryContract, Countable
     }
 
     /** @inerhitDoc */
-    public function with(string $state): FactoryContract
+    public function with(string ...$states): FactoryContract
     {
-        if (!isset($this->getStates()[$state])) {
-            throw OutOfBound::create($state);
-        }
+        foreach ($states as $state) {
+            if (!isset($this->getStates()[$state])) {
+                throw OutOfBound::create($state);
+            }
 
-        $this->usedStates[$state] = $state;
+            $this->usedStates[$state] = $state;
+        }
 
         return $this;
     }

@@ -48,11 +48,11 @@ interface FactoryContract
     public function getStates(): array;
 
     /**
-     * @param string $state
+     * @param string ...$states
      * @return static
      * @throws StateNotFound
      */
-    public function with(string $state): self;
+    public function with(string ...$states): self;
 
     /**
      * The class we are creating factory for
