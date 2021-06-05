@@ -36,18 +36,18 @@ abstract class Factory implements FactoryContract, Countable
     /**
      * @return static|self
      */
-    public static function initialize(?PersistenceContract $persistence = null, ?Generator $faker = null): self
+    final public static function initialize(?PersistenceContract $persistence = null, ?Generator $faker = null): self
     {
         return new static($persistence, $faker);
     }
 
-    public static function from(FactoryContract $factory): self
+    final public static function from(FactoryContract $factory): self
     {
         return self::initialize($factory->getPersistence(), $factory->getFaker());
     }
 
     /** @inheritDoc */
-    public function makeOne(array $attributes = []): Model
+    final public function makeOne(array $attributes = []): Model
     {
         $attributes = array_merge($this->getDefaults(), $attributes);
         $class = static::getClass();
@@ -68,13 +68,13 @@ abstract class Factory implements FactoryContract, Countable
     }
 
     /** @inheritDoc */
-    public function makeMany(array $attributes = [], int $count = 5): array
+    final public function makeMany(array $attributes = [], int $count = 5): array
     {
         return array_map(fn() => $this->makeOne($attributes), range(1, $count));
     }
 
     /** @inheritDoc */
-    public function createOne(array $attributes = []): Model
+    final public function createOne(array $attributes = []): Model
     {
         $model = $this->makeOne($attributes);
 
@@ -84,7 +84,7 @@ abstract class Factory implements FactoryContract, Countable
     }
 
     /** @inheritDoc */
-    public function createMany(array $attributes = [], int $count = 5): array
+    final public function createMany(array $attributes = [], int $count = 5): array
     {
         $models = $this->makeMany($attributes, $count);
 
@@ -100,7 +100,7 @@ abstract class Factory implements FactoryContract, Countable
     }
 
     /** @inerhitDoc */
-    public function with(...$states): FactoryContract
+    final public function with(...$states): FactoryContract
     {
         foreach ($states as $state) {
             $stateAsString = (string)$state;
@@ -119,27 +119,22 @@ abstract class Factory implements FactoryContract, Countable
         return $this;
     }
 
-    public function setPersistence(PersistenceContract $strategy): void
+    final public function setPersistence(PersistenceContract $strategy): void
     {
         $this->persistence = $strategy;
     }
 
-    public function setFaker(Generator $faker): void
-    {
-        $this->faker = $faker;
-    }
-
-    public function getPersistence(): PersistenceContract
+    final public function getPersistence(): PersistenceContract
     {
         return $this->persistence;
     }
 
-    public function getFaker(): Generator
+    final public function getFaker(): Generator
     {
         return $this->faker;
     }
 
-    public function count(): int
+    final public function count(): int
     {
         return count($this->usedStates);
     }
@@ -148,12 +143,12 @@ abstract class Factory implements FactoryContract, Countable
      * @param array<string, mixed> $attributes
      * @return Model
      */
-    public function __invoke(array $attributes = []): Model
+    final public function __invoke(array $attributes = []): Model
     {
         return $this->makeOne($attributes);
     }
 
-    public function withIdsFor(string ...$fields): self
+    final public function withIdsFor(string ...$fields): self
     {
         $this->usedStates[self::IDS_STATE_KEY] = [];
 

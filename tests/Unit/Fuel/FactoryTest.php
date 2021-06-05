@@ -109,11 +109,6 @@ final class FactoryTest extends TestCase
                     },
                 ];
             }
-
-            public static function from(FactoryContract $factory): Factory
-            {
-                return parent::from($factory);
-            }
         };
     }
 
