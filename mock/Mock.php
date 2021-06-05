@@ -69,5 +69,15 @@ if (!class_exists('Orm\Model')) {
         {
 
         }
+
+        public function __set($name, $value)
+        {
+            $this->offsetSet($name, $value);
+        }
+
+        public function __get($name)
+        {
+            return $this->offsetGet($name);
+        }
     }
 }

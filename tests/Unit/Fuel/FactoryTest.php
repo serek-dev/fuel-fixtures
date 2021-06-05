@@ -22,7 +22,7 @@ final class FactoryTest extends TestCase
     {
         // When initialized
         // Given factory
-        $actual = $this->getFactory(ModelImitation::class);
+        $actual = $this->getFactory();
 
         // Then it should implement FactoryContract
         $this->assertInstanceOf(FactoryContract::class, $actual);
@@ -31,11 +31,11 @@ final class FactoryTest extends TestCase
     }
 
     /** @test */
-    public function constructor_WithGivenPersistenceAndFaker(): void
+    public function constructor_WithGivenPersistenceAndFaker_ShouldContainsGivenInstances(): void
     {
         // When initialized
         // Given factory
-        $factory = $this->getFactory(ModelImitation::class);
+        $factory = $this->getFactory();
         $factoryClass = get_class($factory);
 
         // And persistence
@@ -73,7 +73,7 @@ final class FactoryTest extends TestCase
             ->willReturn($faker);
 
         // When factory create from related factory
-        $factory = $this->getFactory(ModelImitation::class);
+        $factory = $this->getFactory();
         $factoryClass = get_class($factory);
 
         $newFactory = $factoryClass::from($relatedFactory);
@@ -83,7 +83,7 @@ final class FactoryTest extends TestCase
         $this->assertSame($persistence, $newFactory->getPersistence());
     }
 
-    public function getFactory(string $model): Factory
+    public function getFactory(): Factory
     {
         return new class extends Factory {
             public function getDefaults(): array
@@ -130,7 +130,7 @@ final class FactoryTest extends TestCase
     public function makeOne_NoAttributes_ShouldCreateWithDefaults(): Model
     {
         // Given factory
-        $factory = $this->getFactory(ModelImitation::class);
+        $factory = $this->getFactory();
         $expected = $factory->getDefaults();
 
         // When makeOne is called
@@ -147,7 +147,7 @@ final class FactoryTest extends TestCase
     public function invoke_NoAttributes_ShouldActAsMakeOne(): void
     {
         // Given factory
-        $factory = $this->getFactory(ModelImitation::class);
+        $factory = $this->getFactory();
         $expected = $factory->getDefaults();
 
         // When invoke is called
@@ -171,7 +171,7 @@ final class FactoryTest extends TestCase
     public function makeOne_AttributesGiven_ShouldMergeWithDefaults(): Model
     {
         // Given factory
-        $factory = $this->getFactory(ModelImitation::class);
+        $factory = $this->getFactory();
         $factory->getDefaults();
         $attributes = ['id' => 123, 'field' => 'field'];
         $expected = [
@@ -198,7 +198,7 @@ final class FactoryTest extends TestCase
     public function makeMany_NoAttributes_ShouldCreateWithDefaults(): array
     {
         // Given factory
-        $factory = $this->getFactory(ModelImitation::class);
+        $factory = $this->getFactory();
         $expected = $factory->getDefaults();
 
         // When makeMany is called
@@ -266,7 +266,7 @@ final class FactoryTest extends TestCase
     public function createOne_NoAttributes_ShouldCreateWithDefaults(): Model
     {
         // Given factory
-        $factory = $this->getFactory(ModelImitation::class);
+        $factory = $this->getFactory();
         $expected = $factory->getDefaults();
 
         // When createOne is called
@@ -292,7 +292,7 @@ final class FactoryTest extends TestCase
     public function createOne_PersistenceStrategySet_ShouldPersistGeneratedModels(): void
     {
         // Given factory
-        $factory = $this->getFactory(ModelImitation::class);
+        $factory = $this->getFactory();
 
         // And persistence strategy is set
         $persistence = $this->createMock(PersistenceContract::class);
@@ -312,7 +312,7 @@ final class FactoryTest extends TestCase
     public function createOne_AttributesGiven_ShouldMergeWithDefaults(): Model
     {
         // Given factory
-        $factory = $this->getFactory(ModelImitation::class);
+        $factory = $this->getFactory();
         $factory->getDefaults();
         $attributes = ['id' => 123, 'field' => 'field'];
         $expected = [
@@ -339,7 +339,7 @@ final class FactoryTest extends TestCase
     public function createMany_NoAttributes_ShouldCreateWithDefaults(): array
     {
         // Given factory
-        $factory = $this->getFactory(ModelImitation::class);
+        $factory = $this->getFactory();
         $expected = $factory->getDefaults();
 
         // When createMany is called
@@ -411,7 +411,7 @@ final class FactoryTest extends TestCase
         $this->expectExceptionMessage("Attempted to reach 'not existing' but it does not exists");
 
         // Given factory
-        $factory = $this->getFactory(ModelImitation::class);
+        $factory = $this->getFactory();
 
         // When with not exiting state called
         $factory->with('not existing')->makeOne();
@@ -421,7 +421,7 @@ final class FactoryTest extends TestCase
     public function with_State_WillIncrementCount(): void
     {
         // Given factory with count = 0
-        $factory = $this->getFactory(ModelImitation::class);
+        $factory = $this->getFactory();
 
         $existingState = 'fake';
 
@@ -433,71 +433,45 @@ final class FactoryTest extends TestCase
         $this->assertEquals(1, $afterCallCount);
     }
 
-//    /** @test */
-//    public function with_State_WillInvokesGivenClosure(): void
-//    {
-//        // Given factory
-//        $factory = $this->createMock(FactoryContract::class);
-//
-//        $count = 3;
-//
-//        // For ModelImitation class
-//        $factory->method('getClass')->willReturn(ModelImitation::class);
-//
-//        // And fake status
-//        // with fake closure
-//        /** @var Closure|MockObject $closure */
-//        $closure = $this->createConfiguredMock(stdClass::class, []);
-//        $closure->expects($this->exactly($count))
-//            ->method('__invoke');
-//
-//        $states = [
-//            'fake' => $closure
-//        ];
-//
-//        $factory->
-//        expects($this->once())
-//            ->method('getStates')
-//            ->willReturn($states);
-//
-//        $factory->with('fake');
-//
-//        // When 3 models created with state
-//        $factory->makeMany([], $count);
-//    }
-//
-//    /** @test */
-//    public function setFaker_ShouldUseGivenFaker(): void
-//    {
-//        // When given factory
-//        $factory = new class() extends Factory {
-//
-//            public function __construct(?PersistenceContract $persistence = null, ?\Faker\Generator $faker = null)
-//            {
-//                parent::__construct($persistence, $faker);
-//            }
-//
-//            public function getDefaults(): array
-//            {
-//                return [
-//                    'field' => $this->faker->name
-//                ];
-//            }
-//
-//            public static function getClass(): string
-//            {
-//                return ModelImitation::class;
-//            }
-//        };
-//
-//        // With custom faker
-//        $faker = \Faker\Factory::create('Pl_pl');
-//
-//        // When custom faker is set
-//        $factory->setFaker($faker);
-//
-//        // When makeOne is called
-//        // Then given faker should be used
-//        $factory->makeOne();
-//    }
+    /** @test */
+    public function withIdsFor_ShouldIncrementCount(): FactoryContract
+    {
+        // Given factory
+        $factory = $this->getFactory();
+        $initialStateCount = count($factory);
+
+        $factoryClone = clone $factory;
+
+        // When called withIdsFor
+        $factory->withIdsFor('id');
+
+        // Then count of states should be
+        $expectedCount = $initialStateCount + 1;
+        $this->assertCount($expectedCount, $factory);
+
+        return $factoryClone;
+    }
+
+    /**
+     * @test
+     * @depends withIdsFor_ShouldIncrementCount
+     */
+    public function withIdsFor_ShouldReplaceGivenIdsByRandomNumber(FactoryContract $factory): void
+    {
+        // Given factory with some predefined attributes
+        $beforeAttributes = ['id' => -1, 'status' => 'status', 'body' => 'body', 'related_id' => null];
+        $beforeIdsAddedModel = $factory->makeOne($beforeAttributes)->to_array();
+
+        // And expected attrs set
+        // When after withIdsFor is called
+        $afterIdsAddedModel = $factory->withIdsFor('id', 'related_id')->makeOne($beforeAttributes)->to_array();
+
+        // Then id and related_id fields should be replaced
+        // by random number from faker
+        $this->assertNotSame($beforeIdsAddedModel['id'], $afterIdsAddedModel['id']);
+        $this->assertSame($beforeIdsAddedModel['status'], $afterIdsAddedModel['status']);
+        $this->assertSame($beforeIdsAddedModel['body'], $afterIdsAddedModel['body']);
+        $this->assertNotSame($beforeIdsAddedModel['related_id'], $afterIdsAddedModel['related_id']);
+        $this->assertIsNumeric($afterIdsAddedModel['related_id']);
+    }
 }

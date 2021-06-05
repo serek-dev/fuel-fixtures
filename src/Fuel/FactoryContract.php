@@ -11,7 +11,7 @@ use Stwarog\FuelFixtures\Exceptions\StateNotFound;
 
 interface FactoryContract
 {
-    public function __construct(?PersistenceContract $persistence = null);
+    public function __construct(?PersistenceContract $persistence = null, ?Generator $faker = null);
 
     /**
      * @return array
@@ -68,4 +68,11 @@ interface FactoryContract
     public function getPersistence(): PersistenceContract;
 
     public function getFaker(): Generator;
+
+    /**
+     * Creates random ids for given fields. Should not be called only with "make" methods.
+     * @param string ...$fields
+     * @return $this
+     */
+    public function withIdsFor(string ...$fields): self;
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Stwarog\FuelFixtures\Fuel;
 
+use Closure;
 use Countable;
 use Faker\Generator;
 use Orm\Model;
@@ -16,6 +17,9 @@ abstract class Factory implements FactoryContract, Countable
 
     /** @var array<string, string> */
     private array $usedStates = [];
+
+    /** @var array<string, mixed|Closure> */
+    private array $customClosures = [];
 
     public function __construct(?PersistenceContract $persistence = null, ?Generator $faker = null)
     {
@@ -44,9 +48,13 @@ abstract class Factory implements FactoryContract, Countable
 
         $model = new $class($attributes);
 
+        $definedStates = $this->getStates();
+        $customStates = $this->customClosures;
+        $allStates = array_merge($definedStates, $customStates);
+
         // apply all closures
         foreach ($this->usedStates as $stateName) {
-            $this->getStates()[$stateName]($model, $attributes);
+            $allStates[$stateName]($model, $attributes);
         }
 
         return $model;
@@ -120,5 +128,18 @@ abstract class Factory implements FactoryContract, Countable
     public function __invoke(array $attributes = []): Model
     {
         return $this->makeOne($attributes);
+    }
+
+    public function withIdsFor(string ...$fields): self
+    {
+        $idsClosureKey = '_ids';
+        $this->usedStates[$idsClosureKey] = $idsClosureKey;
+
+        $this->customClosures[$idsClosureKey] = function (Model $model, array $attributes = []) use ($fields) {
+            foreach ($fields as $field) {
+                $model->$field = $this->faker->numberBetween(1, 10000);
+            }
+        };
+        return $this;
     }
 }

@@ -8,5 +8,5 @@ use Orm\Model;
 
 class ModelImitation extends Model
 {
-    public const PROPERTIES = ['id', 'status', 'body'];
+    public const PROPERTIES = ['id', 'status', 'body', 'related_id'];
 }
