@@ -12,7 +12,7 @@ use Stwarog\FuelFixtures\Exceptions\OutOfBound;
 abstract class Factory implements FactoryContract, Countable
 {
     protected PersistenceContract $persistence;
-    protected ?Generator $faker;
+    protected Generator $faker;
 
     /** @var array<string, string> */
     private array $usedStates = [];
@@ -29,6 +29,11 @@ abstract class Factory implements FactoryContract, Countable
     public static function initialize(?PersistenceContract $persistence = null, ?Generator $faker = null): self
     {
         return new static($persistence, $faker);
+    }
+
+    public static function from(FactoryContract $factory): self
+    {
+        return self::initialize($factory->getPersistence(), $factory->getFaker());
     }
 
     /** @inheritDoc */

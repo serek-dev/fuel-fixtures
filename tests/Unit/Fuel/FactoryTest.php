@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Fuel;
 
+use Faker\Generator;
 use Orm\Model;
 use PHPUnit\Framework\TestCase;
 use Stwarog\FuelFixtures\Exceptions\OutOfBound;
 use Stwarog\FuelFixtures\Fuel\Factory;
 use Stwarog\FuelFixtures\Fuel\FactoryContract;
+use Stwarog\FuelFixtures\Fuel\FuelPersistence;
 use Stwarog\FuelFixtures\Fuel\PersistenceContract;
 use Tests\Unit\Mocks\ModelImitation;
 
@@ -24,6 +26,61 @@ final class FactoryTest extends TestCase
 
         // Then it should implement FactoryContract
         $this->assertInstanceOf(FactoryContract::class, $actual);
+        $this->assertNotNull($actual->getPersistence());
+        $this->assertNotNull($actual->getFaker());
+    }
+
+    /** @test */
+    public function constructor_WithGivenPersistenceAndFaker(): void
+    {
+        // When initialized
+        // Given factory
+        $factory = $this->getFactory(ModelImitation::class);
+        $factoryClass = get_class($factory);
+
+        // And persistence
+        $persistence = new FuelPersistence();
+
+        // And faker instance
+        $faker = \Faker\Factory::create();
+
+        // When factory created
+        $newFactory = new $factoryClass($persistence, $faker);
+
+        // Then new class should have the some persistence and faker
+        $this->assertSame($faker, $newFactory->getFaker());
+        $this->assertSame($persistence, $newFactory->getPersistence());
+    }
+
+    /** @test */
+    public function from_Factory_ShouldCreateWithGivenPersistenceAndFaker(): void
+    {
+        // Given factory
+        $relatedFactory = $this->createMock(FactoryContract::class);
+
+        // And persistence
+        $persistence = new FuelPersistence();
+
+        $relatedFactory->expects($this->once())
+            ->method('getPersistence')
+            ->willReturn($persistence);
+
+        // And faker instance
+        $faker = \Faker\Factory::create();
+
+        $relatedFactory->expects($this->once())
+            ->method('getFaker')
+            ->willReturn($faker);
+
+        // When factory create from related factory
+        $factory = $this->getFactory(ModelImitation::class);
+        $factoryClass = get_class($factory);
+
+        $newFactory = $factoryClass::from($relatedFactory);
+
+        // Then new class should have the some persistence and faker
+        $this->assertSame($faker, $newFactory->getFaker());
+        $this->assertSame($persistence, $newFactory->getPersistence());
     }
 
     public function getFactory(string $model): Factory
@@ -50,6 +107,21 @@ final class FactoryTest extends TestCase
                     'fake' => static function (ModelImitation $model, array $attributes = []) {
                     },
                 ];
+            }
+
+            public function getPersistence(): PersistenceContract
+            {
+                return $this->persistence;
+            }
+
+            public function getFaker(): Generator
+            {
+                return $this->faker;
+            }
+
+            public static function from(FactoryContract $factory): Factory
+            {
+                return parent::from($factory);
             }
         };
     }
@@ -354,12 +426,13 @@ final class FactoryTest extends TestCase
         $existingState = 'fake';
 
         // When called with state
-        $factory->with('fake')->makeOne();
+        $factory->with($existingState)->makeOne();
         $afterCallCount = count($factory);
 
         // Then call should be 1
         $this->assertEquals(1, $afterCallCount);
     }
+
 //    /** @test */
 //    public function with_State_WillInvokesGivenClosure(): void
 //    {

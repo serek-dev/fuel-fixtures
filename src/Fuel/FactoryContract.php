@@ -64,4 +64,8 @@ interface FactoryContract
      * @return static
      */
     public static function initialize(?PersistenceContract $persistence = null, ?Generator $faker = null): self;
+
+    public function getPersistence(): PersistenceContract;
+
+    public function getFaker(): Generator;
 }
