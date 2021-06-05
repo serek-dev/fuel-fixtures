@@ -7,7 +7,7 @@ namespace Stwarog\FuelFixtures\Fuel;
 use Closure;
 use Faker\Generator;
 use Orm\Model;
-use Stwarog\FuelFixtures\Exceptions\StateNotFound;
+use Stwarog\FuelFixtures\Exceptions\ConflictException;
 use Stwarog\FuelFixtures\State;
 
 interface FactoryContract
@@ -51,7 +51,7 @@ interface FactoryContract
     /**
      * @param string|State ...$states
      * @return static
-     * @throws StateNotFound
+     * @throws ConflictException
      */
     public function with(...$states): self;
 

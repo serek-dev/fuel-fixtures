@@ -6,7 +6,7 @@ namespace Stwarog\FuelFixtures\Exceptions;
 
 use OutOfBoundsException;
 
-class OutOfBound extends OutOfBoundsException
+class OutOfStateBound extends OutOfBoundsException
 {
     public static function create(string $state): self
     {

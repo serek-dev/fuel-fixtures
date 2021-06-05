@@ -8,7 +8,8 @@ use Closure;
 use Countable;
 use Faker\Generator;
 use Orm\Model;
-use Stwarog\FuelFixtures\Exceptions\OutOfBound;
+use Stwarog\FuelFixtures\Exceptions\ConflictException;
+use Stwarog\FuelFixtures\Exceptions\OutOfStateBound;
 use Stwarog\FuelFixtures\State;
 
 abstract class Factory implements FactoryContract, Countable
@@ -102,11 +103,17 @@ abstract class Factory implements FactoryContract, Countable
     public function with(...$states): FactoryContract
     {
         foreach ($states as $state) {
-            if (!isset($this->getStates()[(string)$state])) {
-                throw OutOfBound::create((string)$state);
+            $stateAsString = (string)$state;
+
+            if (!isset($this->getStates()[$stateAsString])) {
+                throw OutOfStateBound::create($stateAsString);
             }
 
-            $this->usedStates[(string)$state] = $state instanceof State ? $state->getAttributes() : [];
+            if (isset($this->usedStates[$stateAsString])) {
+                throw ConflictException::create($stateAsString);
+            }
+
+            $this->usedStates[$stateAsString] = $state instanceof State ? $state->getAttributes() : [];
         }
 
         return $this;
