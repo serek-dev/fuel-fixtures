@@ -12,6 +12,8 @@ use Stwarog\FuelFixtures\Exceptions\OutOfBound;
 
 abstract class Factory implements FactoryContract, Countable
 {
+    private const IDS_STATE_KEY = '_ids';
+
     protected PersistenceContract $persistence;
     protected Generator $faker;
 
@@ -142,14 +144,18 @@ abstract class Factory implements FactoryContract, Countable
 
     public function withIdsFor(string ...$fields): self
     {
-        $idsClosureKey = '_ids';
-        $this->usedStates[$idsClosureKey] = $idsClosureKey;
+        $this->usedStates[self::IDS_STATE_KEY] = self::IDS_STATE_KEY;
 
-        $this->customClosures[$idsClosureKey] = function (Model $model, array $attributes = []) use ($fields) {
+        $this->customClosures[self::IDS_STATE_KEY] = function (Model $model, array $attributes = []) use ($fields) {
             foreach ($fields as $field) {
                 $model->$field = $this->faker->numberBetween(1, 10000);
             }
         };
         return $this;
+    }
+
+    final public function withIds(): bool
+    {
+        return isset($this->usedStates[self::IDS_STATE_KEY]);
     }
 }

@@ -463,4 +463,19 @@ final class FactoryTest extends TestCase
         $this->assertNotSame($beforeIdsAddedModel['related_id'], $afterIdsAddedModel['related_id']);
         $this->assertIsNumeric($afterIdsAddedModel['related_id']);
     }
+
+    /** @test */
+    public function withIds_withIdsForCalled_returnsTrue(): void
+    {
+        $factory = $this->getFactory();
+        $factory->withIdsFor('id');
+        $this->assertTrue($factory->withIds());
+    }
+
+    /** @test */
+    public function withIds_withIdsForNotCalled_returnsFalse(): void
+    {
+        $factory = $this->getFactory();
+        $this->assertFalse($factory->withIds());
+    }
 }

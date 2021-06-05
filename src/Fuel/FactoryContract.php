@@ -75,4 +75,6 @@ interface FactoryContract
      * @return $this
      */
     public function withIdsFor(string ...$fields): self;
+
+    public function withIds(): bool;
 }
