@@ -11,6 +11,7 @@ use Stwarog\FuelFixtures\Fuel\Factory;
 use Stwarog\FuelFixtures\Fuel\FactoryContract;
 use Stwarog\FuelFixtures\Fuel\FuelPersistence;
 use Stwarog\FuelFixtures\Fuel\PersistenceContract;
+use Stwarog\FuelFixtures\State;
 use Tests\Unit\Mocks\ModelImitation;
 
 /** @covers \Stwarog\FuelFixtures\Fuel\Factory */
@@ -420,6 +421,19 @@ final class FactoryTest extends TestCase
 
         // Then call should be 1
         $this->assertEquals(1, $afterCallCount);
+    }
+
+    /** @test */
+    public function with_StateAsObject_WillThreatItAsString(): void
+    {
+        // Given factory
+        $factory = $this->getFactory();
+
+        // When called with fake state as object
+        $factory->with(State::for('fake', []));
+
+        // Then state should be applied
+        $this->assertCount(1, $factory);
     }
 
     /** @test */

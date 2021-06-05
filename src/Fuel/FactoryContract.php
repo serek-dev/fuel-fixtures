@@ -8,6 +8,7 @@ use Closure;
 use Faker\Generator;
 use Orm\Model;
 use Stwarog\FuelFixtures\Exceptions\StateNotFound;
+use Stwarog\FuelFixtures\State;
 
 interface FactoryContract
 {
@@ -48,11 +49,11 @@ interface FactoryContract
     public function getStates(): array;
 
     /**
-     * @param string ...$states
+     * @param string|State ...$states
      * @return static
      * @throws StateNotFound
      */
-    public function with(string ...$states): self;
+    public function with(...$states): self;
 
     /**
      * The class we are creating factory for

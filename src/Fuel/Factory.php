@@ -9,6 +9,7 @@ use Countable;
 use Faker\Generator;
 use Orm\Model;
 use Stwarog\FuelFixtures\Exceptions\OutOfBound;
+use Stwarog\FuelFixtures\State;
 
 abstract class Factory implements FactoryContract, Countable
 {
@@ -17,7 +18,7 @@ abstract class Factory implements FactoryContract, Countable
     protected PersistenceContract $persistence;
     protected Generator $faker;
 
-    /** @var array<string, string> */
+    /** @var array<string, array> */
     private array $usedStates = [];
 
     /** @var array<string, mixed|Closure> */
@@ -55,8 +56,9 @@ abstract class Factory implements FactoryContract, Countable
         $allStates = array_merge($definedStates, $customStates);
 
         // apply all closures
-        foreach ($this->usedStates as $stateName) {
-            $allStates[$stateName]($model, $attributes);
+        foreach ($this->usedStates as $stateName => $stateAttributes) {
+            $closure = $allStates[$stateName];
+            $closure($model, !empty($stateAttributes) ? $stateAttributes : $attributes);
         }
 
         return $model;
@@ -95,14 +97,14 @@ abstract class Factory implements FactoryContract, Countable
     }
 
     /** @inerhitDoc */
-    public function with(string ...$states): FactoryContract
+    public function with(...$states): FactoryContract
     {
         foreach ($states as $state) {
-            if (!isset($this->getStates()[$state])) {
-                throw OutOfBound::create($state);
+            if (!isset($this->getStates()[(string)$state])) {
+                throw OutOfBound::create((string)$state);
             }
 
-            $this->usedStates[$state] = $state;
+            $this->usedStates[(string)$state] = $state instanceof State ? $state->getAttributes() : [];
         }
 
         return $this;
@@ -144,9 +146,9 @@ abstract class Factory implements FactoryContract, Countable
 
     public function withIdsFor(string ...$fields): self
     {
-        $this->usedStates[self::IDS_STATE_KEY] = self::IDS_STATE_KEY;
+        $this->usedStates[self::IDS_STATE_KEY] = [];
 
-        $this->customClosures[self::IDS_STATE_KEY] = function (Model $model, array $attributes = []) use ($fields) {
+        $this->customClosures[self::IDS_STATE_KEY] = function (Model $model) use ($fields) {
             foreach ($fields as $field) {
                 $model->$field = $this->faker->numberBetween(1, 10000);
             }
