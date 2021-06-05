@@ -18,7 +18,9 @@ abstract class Factory implements FactoryContract, Countable
     protected PersistenceContract $persistence;
     protected Generator $faker;
 
-    /** @var array<string, array> */
+    /**
+     * @var array<string, array> - key = stateName, value = attributes
+     */
     private array $usedStates = [];
 
     /** @var array<string, mixed|Closure> */
