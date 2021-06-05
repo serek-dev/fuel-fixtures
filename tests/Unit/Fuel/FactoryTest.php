@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Fuel;
 
-use Faker\Generator;
 use Orm\Model;
 use PHPUnit\Framework\TestCase;
 use Stwarog\FuelFixtures\Exceptions\OutOfBound;
@@ -107,16 +106,6 @@ final class FactoryTest extends TestCase
                     'fake' => static function (ModelImitation $model, array $attributes = []) {
                     },
                 ];
-            }
-
-            public function getPersistence(): PersistenceContract
-            {
-                return $this->persistence;
-            }
-
-            public function getFaker(): Generator
-            {
-                return $this->faker;
             }
 
             public static function from(FactoryContract $factory): Factory

@@ -116,6 +116,16 @@ abstract class Factory implements FactoryContract, Countable
         $this->faker = $faker;
     }
 
+    public function getPersistence(): PersistenceContract
+    {
+        return $this->persistence;
+    }
+
+    public function getFaker(): Generator
+    {
+        return $this->faker;
+    }
+
     public function count(): int
     {
         return count($this->usedStates);
