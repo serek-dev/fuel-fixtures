@@ -41,7 +41,7 @@ abstract class Factory implements FactoryContract, Countable
 
         // apply all closures
         foreach ($this->usedStates as $stateName) {
-            $this->getStates()[$stateName]($model);
+            $this->getStates()[$stateName]($model, $attributes);
         }
 
         return $model;
@@ -106,5 +106,14 @@ abstract class Factory implements FactoryContract, Countable
     public function count(): int
     {
         return count($this->usedStates);
+    }
+
+    /**
+     * @param array<string, mixed> $attributes
+     * @return Model
+     */
+    public function __invoke(array $attributes = []): Model
+    {
+        return $this->makeOne($attributes);
     }
 }

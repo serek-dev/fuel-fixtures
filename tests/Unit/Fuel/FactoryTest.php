@@ -47,7 +47,7 @@ final class FactoryTest extends TestCase
             public function getStates(): array
             {
                 return [
-                    'fake' => static function () {
+                    'fake' => static function (ModelImitation $model, array $attributes = []) {
                     },
                 ];
             }
@@ -69,6 +69,21 @@ final class FactoryTest extends TestCase
         $this->assertSame($expected, $actual);
 
         return $model;
+    }
+
+    /** @test */
+    public function invoke_NoAttributes_ShouldActAsMakeOne(): void
+    {
+        // Given factory
+        $factory = $this->getFactory(ModelImitation::class);
+        $expected = $factory->getDefaults();
+
+        // When invoke is called
+        $model = $factory();
+        $actual = $model->to_array();
+
+        // Then defaults should be assigned
+        $this->assertSame($expected, $actual);
     }
 
     /**
