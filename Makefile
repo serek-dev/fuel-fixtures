@@ -6,17 +6,17 @@ unit:
 	docker-compose run --rm composer tests:unit
 
 stan:
-		docker-compose run --rm composer phpstan
+	docker-compose run --rm composer phpstan
 
 cs:
-		docker-compose run --rm composer phpcs
+	docker-compose run --rm composer phpcs
 cs_fix:
-		docker-compose run --rm composer phpcs:fix
+	docker-compose run --rm composer phpcs:fix
 
 build:
 	docker-compose pull
 	docker-compose build --pull
-	composer install --ignore-platform-reqs
+	docker-compose run --rm composer install --ignore-platform-reqs
 
 stop:
 	docker-compose down -v --remove-orphans
