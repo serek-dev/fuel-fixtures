@@ -491,15 +491,25 @@ final class FactoryTest extends TestCase
     /** @test */
     public function withIds_withIdsForCalled_returnsTrue(): void
     {
+        // Given factory
         $factory = $this->getFactory();
+
+        // When called withIdsFor "id" field
         $factory->withIdsFor('id');
+
+        // Then withIds method should return true
         $this->assertTrue($factory->withIds());
     }
 
     /** @test */
     public function withIds_withIdsForNotCalled_returnsFalse(): void
     {
+        // Given factory
         $factory = $this->getFactory();
+
+        // When withIdsFor method is not called
+
+        // Then withIds method should return false
         $this->assertFalse($factory->withIds());
     }
 }
