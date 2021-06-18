@@ -15,7 +15,7 @@ interface FactoryContract
     public function __construct(?PersistenceContract $persistence = null, ?Generator $faker = null);
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
     public function getDefaults(): array;
 
@@ -26,7 +26,7 @@ interface FactoryContract
     public function makeOne(array $attributes = []): Model;
 
     /**
-     * @param array{?string, ?mixed}[]|array[] $attributes
+     * @param array<string, mixed> $attributes
      * @return array<Model>
      */
     public function makeMany(array $attributes = [], int $count = 5): array;
@@ -38,7 +38,7 @@ interface FactoryContract
     public function createOne(array $attributes = []): Model;
 
     /**
-     * @param array<array<string, mixed>> $attributes
+     * @param array<string, mixed> $attributes
      * @return array<Model>
      */
     public function createMany(array $attributes = [], int $count = 5): array;
