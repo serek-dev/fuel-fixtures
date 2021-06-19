@@ -7,6 +7,7 @@ namespace Stwarog\FuelFixtures\Fuel;
 use Countable;
 use Faker\Generator;
 use Orm\Model;
+use OutOfBoundsException;
 use Stwarog\FuelFixtures\Exceptions\OutOfStateBound;
 use Stwarog\FuelFixtures\State;
 
@@ -112,10 +113,6 @@ abstract class Factory implements FactoryContract, Countable
                 $subState = $chunks[1];
             }
 
-            if (!$this->hasState($stateAsString)) {
-                throw OutOfStateBound::create($stateAsString);
-            }
-
             if (is_array($stateAsArray = $this->getState($stateAsString))) {
                 $parent = $this;
                 $this->customClosures[$stateAsString] = function (Model $model, array $attributes = [])
@@ -198,6 +195,7 @@ abstract class Factory implements FactoryContract, Countable
     /**
      * @param string $state
      * @return callable|array{0: string, 1: FactoryContract}
+     * @throws OutOfBoundsException
      */
     private function getState(string $state)
     {
