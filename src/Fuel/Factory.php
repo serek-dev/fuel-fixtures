@@ -103,6 +103,15 @@ abstract class Factory implements FactoryContract, Countable
         foreach ($states as $state) {
             $stateAsString = (string)$state;
 
+            $chunks = explode('.', $stateAsString);
+            $isNested = count($chunks) > 1;
+            $subState = null;
+
+            if ($isNested) {
+                $stateAsString = $chunks[0];
+                $subState = $chunks[1];
+            }
+
             if (!$this->hasState($stateAsString)) {
                 throw OutOfStateBound::create($stateAsString);
             }
@@ -110,10 +119,14 @@ abstract class Factory implements FactoryContract, Countable
             if (is_array($stateAsArray = $this->getState($stateAsString))) {
                 $parent = $this;
                 $this->customClosures[$stateAsString] = function (Model $model, array $attributes = [])
-                use ($stateAsArray, $parent) {
+                use ($subState, $isNested, $stateAsArray, $parent) {
                     [$property, $factoryName] = $stateAsArray;
                     /** @var FactoryContract $subFactory */
                     $subFactory = $factoryName::from($parent);
+
+                    if ($isNested && !empty($subState)) {
+                        $subFactory->with($subState);
+                    }
                     $model->$property = $subFactory->makeOne($attributes);
                 };
                 $this->usedStates[$stateAsString] = [];

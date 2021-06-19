@@ -519,4 +519,21 @@ final class FactoryTest extends TestCase
         $this->assertInstanceOf(ModelImitation::class, $model->relation);
         $this->assertSame('body', $model->relation->body);
     }
+
+    /** @test */
+    public function with_stateAsArrayReferenceWithSubState_callsRelatedFactoryWithDefinedState(): void
+    {
+        // Given factory
+        $factory = $this->getFactory();
+
+        // When with factory (relation reference) states called makeOne
+        $factory->with('factory.fake');
+        /** @var ModelImitation $model */
+        $model = $factory->makeOne();
+
+        // Then nested relation should be called with default values
+        $this->assertNotEmpty($model->relation);
+        $this->assertInstanceOf(ModelImitation::class, $model->relation);
+        $this->assertSame('fake', $model->relation->body);
+    }
 }
