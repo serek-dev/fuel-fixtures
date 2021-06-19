@@ -43,7 +43,7 @@ interface FactoryContract
     public function createMany(array $attributes = [], int $count = 5): array;
 
     /**
-     * @return array<string, callable|array{0: string, 1: FactoryContract}>
+     * @return array<string, array{0: string, 1: FactoryContract}|callable|Reference>
      */
     public function getStates(): array;
 

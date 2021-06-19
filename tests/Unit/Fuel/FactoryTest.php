@@ -11,6 +11,7 @@ use Stwarog\FuelFixtures\Fuel\Factory;
 use Stwarog\FuelFixtures\Fuel\FactoryContract;
 use Stwarog\FuelFixtures\Fuel\FuelPersistence;
 use Stwarog\FuelFixtures\Fuel\PersistenceContract;
+use Stwarog\FuelFixtures\Reference;
 use Stwarog\FuelFixtures\State;
 use Tests\Unit\Mocks\ModelImitation;
 
@@ -108,7 +109,8 @@ final class FactoryTest extends TestCase
                     'fake' => static function (ModelImitation $model, array $attributes = []) {
                         $model->body = 'fake';
                     },
-                    'factory' => ['relation', $this]
+                    'factory' => ['relation', $this],
+                    'factory_reference' => Reference::for('relation', $this)
                 ];
             }
         };
@@ -503,14 +505,17 @@ final class FactoryTest extends TestCase
         $this->assertFalse($factory->withIds());
     }
 
-    /** @test */
-    public function with_stateAsArrayReference_callsRelatedFactoryWithDefaultState(): void
+    /**
+     * @test
+     * @dataProvider withReferenceStateMethodToBeCalledProvider
+     */
+    public function with_stateAsArrayReference_callsRelatedFactoryWithDefaultState(string $state): void
     {
         // Given factory
         $factory = $this->getFactory();
 
         // When with factory (relation reference) states called makeOne
-        $factory->with('factory');
+        $factory->with($state);
         /** @var ModelImitation $model */
         $model = $factory->makeOne();
 
@@ -520,14 +525,17 @@ final class FactoryTest extends TestCase
         $this->assertSame('body', $model->relation->body);
     }
 
-    /** @test */
-    public function with_stateAsArrayReferenceWithSubState_callsRelatedFactoryWithDefinedState(): void
+    /**
+     * @test
+     * @dataProvider withReferenceStateMethodToBeCalledProvider
+     */
+    public function with_stateAsArrayReferenceWithSubState_callsRelatedFactoryWithDefinedState(string $state): void
     {
         // Given factory
         $factory = $this->getFactory();
 
         // When with factory (relation reference) states called makeOne
-        $factory->with('factory.fake');
+        $factory->with("$state.fake");
         /** @var ModelImitation $model */
         $model = $factory->makeOne();
 
@@ -535,5 +543,16 @@ final class FactoryTest extends TestCase
         $this->assertNotEmpty($model->relation);
         $this->assertInstanceOf(ModelImitation::class, $model->relation);
         $this->assertSame('fake', $model->relation->body);
+    }
+
+    /**
+     * @return array<string, array<string>>
+     */
+    public function withReferenceStateMethodToBeCalledProvider(): array
+    {
+        return [
+            'by array reference' => ['factory'],
+            'by reference class' => ['factory_reference'],
+        ];
     }
 }

@@ -9,6 +9,7 @@ use Faker\Generator;
 use Orm\Model;
 use OutOfBoundsException;
 use Stwarog\FuelFixtures\Exceptions\OutOfStateBound;
+use Stwarog\FuelFixtures\Reference;
 use Stwarog\FuelFixtures\State;
 
 abstract class Factory implements FactoryContract, Countable
@@ -113,7 +114,12 @@ abstract class Factory implements FactoryContract, Countable
                 $subState = $chunks[1];
             }
 
-            if (is_array($stateAsArray = $this->getState($stateAsString))) {
+            $stateAsArray = $this->getState($stateAsString);
+            if ($stateAsArray instanceof Reference) {
+                $stateAsArray = $stateAsArray->toArray();
+            }
+
+            if (is_array($stateAsArray)) {
                 $parent = $this;
                 $this->addCustomState(
                     $stateAsString,
@@ -199,7 +205,7 @@ abstract class Factory implements FactoryContract, Countable
 
     /**
      * @param string $state
-     * @return callable|array{0: string, 1: FactoryContract}
+     * @return callable|array{0: string, 1: FactoryContract}|Reference
      * @throws OutOfBoundsException
      */
     private function getState(string $state)
