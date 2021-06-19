@@ -24,7 +24,7 @@ abstract class Factory implements FactoryContract, Countable
     private array $usedStates = [];
 
     /** @var array<string, mixed|callable> */
-    private array $customClosures = [];
+    private array $customStates = [];
 
     public function __construct(?PersistenceContract $persistence = null, ?Generator $faker = null)
     {
@@ -54,7 +54,7 @@ abstract class Factory implements FactoryContract, Countable
         $model = new $class($attributes);
 
         $definedStates = $this->getStates();
-        $customStates = $this->customClosures;
+        $customStates = $this->customStates;
         $allStates = array_merge($definedStates, $customStates);
 
         // apply all closures
@@ -115,7 +115,7 @@ abstract class Factory implements FactoryContract, Countable
 
             if (is_array($stateAsArray = $this->getState($stateAsString))) {
                 $parent = $this;
-                $this->customClosures[$stateAsString] = function (Model $model, array $attributes = [])
+                $this->customStates[$stateAsString] = function (Model $model, array $attributes = [])
                 use ($subState, $isNested, $stateAsArray, $parent) {
                     [$property, $factoryName] = $stateAsArray;
                     /** @var FactoryContract $subFactory */
@@ -126,16 +126,16 @@ abstract class Factory implements FactoryContract, Countable
                     }
                     $model->$property = $subFactory->makeOne($attributes);
                 };
-                $this->usedStates[$stateAsString] = [];
+                $this->addUsedState($stateAsString);
                 continue;
             }
 
             if ($state instanceof State) {
-                $this->usedStates[$stateAsString] = $state->getAttributes();
+                $this->addUsedState($stateAsString, $state->getAttributes());
                 continue;
             }
 
-            $this->usedStates[$stateAsString] = [];
+            $this->addUsedState($stateAsString);
         }
 
         return $this;
@@ -172,9 +172,9 @@ abstract class Factory implements FactoryContract, Countable
 
     final public function withIdsFor(string ...$fields): self
     {
-        $this->usedStates[self::IDS_STATE_KEY] = [];
+        $this->addUsedState(self::IDS_STATE_KEY);
 
-        $this->customClosures[self::IDS_STATE_KEY] = function (Model $model) use ($fields) {
+        $this->customStates[self::IDS_STATE_KEY] = function (Model $model) use ($fields) {
             foreach ($fields as $field) {
                 $model->$field = $this->faker->numberBetween(1, 10000);
             }
@@ -203,5 +203,10 @@ abstract class Factory implements FactoryContract, Countable
             throw OutOfStateBound::create($state);
         }
         return $this->getStates()[$state];
+    }
+
+    private function addUsedState(string $stateName, array $attributes = []): void
+    {
+        $this->usedStates[$stateName] = $attributes;
     }
 }
