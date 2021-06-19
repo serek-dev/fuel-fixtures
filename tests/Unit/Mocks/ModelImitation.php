@@ -12,6 +12,7 @@ use Orm\Model;
  * @property string $body
  * @property int $related_id
  * @property ?object $relation
+ * @property array<object> $relation_many
  */
 class ModelImitation extends Model
 {

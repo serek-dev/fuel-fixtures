@@ -110,7 +110,8 @@ final class FactoryTest extends TestCase
                         $model->body = 'fake';
                     },
                     'factory' => ['relation', $this],
-                    'factory_reference' => Reference::for('relation', $this)
+                    'factory_reference' => Reference::for('relation', $this),
+                    'factory_many' => ['relation_many', $this],
                 ];
             }
         };
@@ -554,5 +555,26 @@ final class FactoryTest extends TestCase
             'by array reference' => ['factory'],
             'by reference class' => ['factory_reference'],
         ];
+    }
+
+    /** @test */
+    public function with_stateAsArrayReferenceTypeWithSquareBrackets_willCallMakeManyWithDefault5Instances(): void
+    {
+        // Given factory
+        $factory = $this->getFactory();
+        $expectedInstancesCount = 5;
+
+        // When with factory (relation reference) states called with makeOne
+        $factory->with('factory_many[]');
+        /** @var ModelImitation $model */
+        $model = $factory->makeOne();
+
+        // Then nested relation should be called with default values with makeMany method
+        $this->assertIsArray($model->relation_many);
+        $this->assertCount($expectedInstancesCount, $model->relation_many);
+        foreach ($model->relation_many as $related) {
+            $this->assertInstanceOf(ModelImitation::class, $related);
+            $this->assertSame('body', $related->body);
+        }
     }
 }

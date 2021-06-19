@@ -108,10 +108,16 @@ abstract class Factory implements FactoryContract, Countable
             $chunks = explode('.', $stateAsString);
             $isNested = count($chunks) > 1;
             $subState = null;
+            $shouldMakeMany = false;
 
             if ($isNested) {
                 $stateAsString = $chunks[0];
                 $subState = $chunks[1];
+            }
+
+            if ($hasBrackets = strpos($stateAsString, '[]') !== false) {
+                $shouldMakeMany = true;
+                $stateAsString = str_replace('[]', '', $stateAsString);
             }
 
             $stateAsArray = $this->getState($stateAsString);
@@ -123,7 +129,13 @@ abstract class Factory implements FactoryContract, Countable
                 $parent = $this;
                 $this->addCustomState(
                     $stateAsString,
-                    function (Model $model, array $attributes = []) use ($subState, $isNested, $stateAsArray, $parent) {
+                    function (Model $model, array $attributes = []) use (
+                        $shouldMakeMany,
+                        $subState,
+                        $isNested,
+                        $stateAsArray,
+                        $parent
+                    ) {
                         [$property, $factoryName] = $stateAsArray;
                         /** @var FactoryContract $subFactory */
                         $subFactory = $factoryName::from($parent);
@@ -131,6 +143,12 @@ abstract class Factory implements FactoryContract, Countable
                         if ($isNested && !empty($subState)) {
                             $subFactory->with($subState);
                         }
+
+                        if ($shouldMakeMany) {
+                            $model->$property = $subFactory->makeMany($attributes);
+                            return;
+                        }
+
                         $model->$property = $subFactory->makeOne($attributes);
                     }
                 );
