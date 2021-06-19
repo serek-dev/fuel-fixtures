@@ -109,15 +109,23 @@ abstract class Factory implements FactoryContract, Countable
             $isNested = count($chunks) > 1;
             $subState = null;
             $shouldMakeMany = false;
+            $makeManyCount = 5;
 
             if ($isNested) {
                 $stateAsString = $chunks[0];
                 $subState = $chunks[1];
             }
 
-            if ($hasBrackets = strpos($stateAsString, '[]') !== false) {
+            # todo: refactor to use regex
+            if ($hasBrackets = strpos($stateAsString, '[') !== false) {
+                $start = strpos($stateAsString, '[');
+                $end = strpos($stateAsString, ']', $start + 1);
+                $length = $end - $start;
+                $result = substr($stateAsString, $start + 1, $length - 1);
+
                 $shouldMakeMany = true;
-                $stateAsString = str_replace('[]', '', $stateAsString);
+                $makeManyCount = !empty($result) ? (int)$result : 5;
+                $stateAsString = str_replace("[$result]", "", $stateAsString);
             }
 
             $stateAsArray = $this->getState($stateAsString);
@@ -129,7 +137,11 @@ abstract class Factory implements FactoryContract, Countable
                 $parent = $this;
                 $this->addCustomState(
                     $stateAsString,
-                    function (Model $model, array $attributes = []) use (
+                    function (
+                        Model $model,
+                        array $attributes = []
+                    ) use (
+                        $makeManyCount,
                         $shouldMakeMany,
                         $subState,
                         $isNested,
@@ -145,7 +157,7 @@ abstract class Factory implements FactoryContract, Countable
                         }
 
                         if ($shouldMakeMany) {
-                            $model->$property = $subFactory->makeMany($attributes);
+                            $model->$property = $subFactory->makeMany($attributes, $makeManyCount);
                             return;
                         }
 

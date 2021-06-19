@@ -11,7 +11,6 @@ final class State
     private array $attributes;
 
     /**
-     * State constructor.
      * @param string $state
      * @param array<string, mixed> $attributes
      */

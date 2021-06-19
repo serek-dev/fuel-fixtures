@@ -577,4 +577,47 @@ final class FactoryTest extends TestCase
             $this->assertSame('body', $related->body);
         }
     }
+
+    /** @test */
+    public function with_stateAsArrayReferenceTypeWithSquareBracketsCount_willCallMakeManyWithGivenCount(): void
+    {
+        // Given factory
+        $factory = $this->getFactory();
+        $expectedInstancesCount = 15;
+
+        // When with factory (relation reference) states called with makeOne
+        $factory->with("factory_many[15]");
+        /** @var ModelImitation $model */
+        $model = $factory->makeOne();
+
+        // Then nested relation should be called with default values with makeMany method
+        $this->assertIsArray($model->relation_many);
+        $this->assertCount($expectedInstancesCount, $model->relation_many);
+        foreach ($model->relation_many as $related) {
+            $this->assertInstanceOf(ModelImitation::class, $related);
+            $this->assertSame('body', $related->body);
+        }
+    }
+
+    /** @test */
+    public function with_stateAsArrayReferenceTypeWithSquareBracketsCountAndNestedState_willCallMakeManyWithGivenCount(
+    ): void
+    {
+        // Given factory
+        $factory = $this->getFactory();
+        $expectedInstancesCount = 2;
+
+        // When with factory (relation reference) states called with makeOne
+        $factory->with("factory_many[2].fake");
+        /** @var ModelImitation $model */
+        $model = $factory->makeOne();
+
+        // Then nested relation should be called with default values with makeMany method
+        $this->assertIsArray($model->relation_many);
+        $this->assertCount($expectedInstancesCount, $model->relation_many);
+        foreach ($model->relation_many as $related) {
+            $this->assertInstanceOf(ModelImitation::class, $related);
+            $this->assertSame('fake', $related->body);
+        }
+    }
 }
