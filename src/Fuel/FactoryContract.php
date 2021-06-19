@@ -8,6 +8,7 @@ use Faker\Generator;
 use Orm\Model;
 use Stwarog\FuelFixtures\Exceptions\ConflictException;
 use Stwarog\FuelFixtures\State;
+use Stwarog\FuelFixtures\Reference;
 
 interface FactoryContract
 {
