@@ -514,7 +514,9 @@ final class FactoryTest extends TestCase
         /** @var ModelImitation $model */
         $model = $factory->makeOne();
 
-        // Then nested relation should be called
+        // Then nested relation should be called with default values
         $this->assertNotEmpty($model->relation);
+        $this->assertInstanceOf(ModelImitation::class, $model->relation);
+        $this->assertSame('body', $model->relation->body);
     }
 }
