@@ -6,7 +6,6 @@ namespace Tests\Unit\Fuel;
 
 use Orm\Model;
 use PHPUnit\Framework\TestCase;
-use Stwarog\FuelFixtures\Exceptions\ConflictException;
 use Stwarog\FuelFixtures\Exceptions\OutOfStateBound;
 use Stwarog\FuelFixtures\Fuel\Factory;
 use Stwarog\FuelFixtures\Fuel\FactoryContract;
@@ -406,20 +405,6 @@ final class FactoryTest extends TestCase
 
         // When with not exiting state called
         $factory->with('not existing')->makeOne();
-    }
-
-    /** @test */
-    public function with_MultipleStatesPush_WillThrowConflictException(): void
-    {
-        // Expects
-        $this->expectException(ConflictException::class);
-        $this->expectExceptionMessage("Attempted to add multiple 'fake' calls. Only one allowed");
-
-        // Given factory
-        $factory = $this->getFactory();
-
-        // When multiple calls of exiting state
-        $factory->with('fake', 'fake')->makeOne();
     }
 
     /** @test */

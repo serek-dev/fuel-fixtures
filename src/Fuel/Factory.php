@@ -7,7 +7,6 @@ namespace Stwarog\FuelFixtures\Fuel;
 use Countable;
 use Faker\Generator;
 use Orm\Model;
-use Stwarog\FuelFixtures\Exceptions\ConflictException;
 use Stwarog\FuelFixtures\Exceptions\OutOfStateBound;
 use Stwarog\FuelFixtures\State;
 
@@ -106,10 +105,6 @@ abstract class Factory implements FactoryContract, Countable
 
             if (!$this->hasState($stateAsString)) {
                 throw OutOfStateBound::create($stateAsString);
-            }
-
-            if (isset($this->usedStates[$stateAsString])) {
-                throw ConflictException::create($stateAsString);
             }
 
             if (is_array($stateAsArray = $this->getState($stateAsString))) {
