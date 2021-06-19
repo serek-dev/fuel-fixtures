@@ -93,6 +93,7 @@ final class FactoryTest extends TestCase
                     'id' => 'id',
                     'status' => 'status',
                     'body' => 'body',
+                    'relation' => null
                 ];
             }
 
@@ -106,7 +107,9 @@ final class FactoryTest extends TestCase
             {
                 return [
                     'fake' => static function (ModelImitation $model, array $attributes = []) {
+                        $model->body = 'fake';
                     },
+                    'factory' => ['relation', $this]
                 ];
             }
         };
@@ -164,7 +167,8 @@ final class FactoryTest extends TestCase
             'id' => 123,
             'status' => 'status',
             'body' => 'body',
-            'field' => 'field'
+            'relation' => null,
+            'field' => 'field',
         ];
 
         // When makeOne is called
@@ -305,6 +309,7 @@ final class FactoryTest extends TestCase
             'id' => 123,
             'status' => 'status',
             'body' => 'body',
+            'relation' => null,
             'field' => 'field'
         ];
 
@@ -511,5 +516,20 @@ final class FactoryTest extends TestCase
 
         // Then withIds method should return false
         $this->assertFalse($factory->withIds());
+    }
+
+    /** @test */
+    public function with_stateAsArrayReference_callsRelatedFactoryWithDefaultState(): void
+    {
+        // Given factory
+        $factory = $this->getFactory();
+
+        // When with factory (relation reference) states called makeOne
+        $factory->with('factory');
+        /** @var ModelImitation $model */
+        $model = $factory->makeOne();
+
+        // Then nested relation should be called
+        $this->assertNotEmpty($model->relation);
     }
 }

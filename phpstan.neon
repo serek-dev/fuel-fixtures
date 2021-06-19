@@ -3,8 +3,7 @@ includes:
   - vendor/phpstan/phpstan-phpunit/rules.neon
 parameters:
     checkGenericClassInNonGenericObjectType: false
-    ignoreErrors:
-        - '#return type has no value type specified in iterable type#'
+    checkMissingIterableValueType: false
     level: max
     paths:
         - src

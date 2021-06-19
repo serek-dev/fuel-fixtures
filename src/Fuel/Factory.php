@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Stwarog\FuelFixtures\Fuel;
 
-use Closure;
 use Countable;
 use Faker\Generator;
 use Orm\Model;
@@ -24,7 +23,7 @@ abstract class Factory implements FactoryContract, Countable
      */
     private array $usedStates = [];
 
-    /** @var array<string, mixed|Closure> */
+    /** @var array<string, mixed|callable> */
     private array $customClosures = [];
 
     public function __construct(?PersistenceContract $persistence = null, ?Generator $faker = null)
@@ -105,7 +104,7 @@ abstract class Factory implements FactoryContract, Countable
         foreach ($states as $state) {
             $stateAsString = (string)$state;
 
-            if (!isset($this->getStates()[$stateAsString])) {
+            if (!$this->hasState($stateAsString)) {
                 throw OutOfStateBound::create($stateAsString);
             }
 
@@ -113,7 +112,25 @@ abstract class Factory implements FactoryContract, Countable
                 throw ConflictException::create($stateAsString);
             }
 
-            $this->usedStates[$stateAsString] = $state instanceof State ? $state->getAttributes() : [];
+            if (is_array($stateAsArray = $this->getState($stateAsString))) {
+                $parent = $this;
+                $this->customClosures[$stateAsString] = function (Model $model, array $attributes = [])
+                use ($stateAsArray, $parent) {
+                    [$property, $factoryName] = $stateAsArray;
+                    /** @var FactoryContract $subFactory */
+                    $subFactory = $factoryName::from($parent);
+                    $model->$property = $subFactory->makeOne($attributes);
+                };
+                $this->usedStates[$stateAsString] = [];
+                continue;
+            }
+
+            if ($state instanceof State) {
+                $this->usedStates[$stateAsString] = $state->getAttributes();
+                continue;
+            }
+
+            $this->usedStates[$stateAsString] = [];
         }
 
         return $this;
@@ -163,5 +180,22 @@ abstract class Factory implements FactoryContract, Countable
     final public function withIds(): bool
     {
         return isset($this->usedStates[self::IDS_STATE_KEY]);
+    }
+
+    final public function hasState(string $state): bool
+    {
+        return isset($this->getStates()[$state]);
+    }
+
+    /**
+     * @param string $state
+     * @return callable|array{0: string, 1: FactoryContract}
+     */
+    private function getState(string $state)
+    {
+        if (!$this->hasState($state)) {
+            throw OutOfStateBound::create($state);
+        }
+        return $this->getStates()[$state];
     }
 }

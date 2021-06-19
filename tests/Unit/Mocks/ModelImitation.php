@@ -6,6 +6,13 @@ namespace Tests\Unit\Mocks;
 
 use Orm\Model;
 
+/**
+ * @property int $id
+ * @property string $status
+ * @property string $body
+ * @property int $related_id
+ * @property ?object $relation
+ */
 class ModelImitation extends Model
 {
     public const PROPERTIES = ['id', 'status', 'body', 'related_id'];

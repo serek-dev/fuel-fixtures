@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Stwarog\FuelFixtures\Fuel;
 
-use Closure;
 use Faker\Generator;
 use Orm\Model;
 use Stwarog\FuelFixtures\Exceptions\ConflictException;
@@ -44,7 +43,7 @@ interface FactoryContract
     public function createMany(array $attributes = [], int $count = 5): array;
 
     /**
-     * @return array<string, Closure>
+     * @return array<string, callable|array{0: string, 1: FactoryContract}>
      */
     public function getStates(): array;
 
@@ -78,4 +77,6 @@ interface FactoryContract
     public function withIdsFor(string ...$fields): self;
 
     public function withIds(): bool;
+
+    public function hasState(string $state): bool;
 }
