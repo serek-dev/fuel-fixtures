@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0afc3a2655fe2e90cc2327c8851f0135",
+    "content-hash": "50e624eaf78b325fe499a7952372d960",
     "packages": [
         {
             "name": "composer/installers",
@@ -831,16 +831,16 @@
         },
         {
             "name": "stwarog/uow",
-            "version": "1.2.0",
+            "version": "1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stwarog/uow.git",
-                "reference": "11354c506e647df154ff5fc07c72186188d60394"
+                "reference": "4de89ad2d822bd15a79a3ff327fa23dc8530ad80"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stwarog/uow/zipball/11354c506e647df154ff5fc07c72186188d60394",
-                "reference": "11354c506e647df154ff5fc07c72186188d60394",
+                "url": "https://api.github.com/repos/stwarog/uow/zipball/4de89ad2d822bd15a79a3ff327fa23dc8530ad80",
+                "reference": "4de89ad2d822bd15a79a3ff327fa23dc8530ad80",
                 "shasum": ""
             },
             "require": {
@@ -850,6 +850,7 @@
             },
             "require-dev": {
                 "phpstan/phpstan": "^0.12.89",
+                "phpstan/phpstan-phpunit": "^0.12.20",
                 "phpunit/phpunit": "7.1.3",
                 "squizlabs/php_codesniffer": "3.6.0",
                 "symfony/var-dumper": "^5.1"
@@ -874,30 +875,32 @@
                 }
             ],
             "description": "Generic Unit of Work pattern implementation for Active Records ORM's. Allows to split technical implementation from domain logic.",
-            "time": "2021-06-11T22:27:40+00:00"
+            "time": "2021-06-22T21:55:56+00:00"
         },
         {
             "name": "stwarog/uow-fuel",
-            "version": "1.2.0",
+            "version": "1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stwarog/uow-fuel.git",
-                "reference": "e7211ec22fa5e8bed8e5de2f24cd113ffcfd9e88"
+                "reference": "b8198c846d41a514b32e2fb2ecda8a9cc471d69a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stwarog/uow-fuel/zipball/e7211ec22fa5e8bed8e5de2f24cd113ffcfd9e88",
-                "reference": "e7211ec22fa5e8bed8e5de2f24cd113ffcfd9e88",
+                "url": "https://api.github.com/repos/stwarog/uow-fuel/zipball/b8198c846d41a514b32e2fb2ecda8a9cc471d69a",
+                "reference": "b8198c846d41a514b32e2fb2ecda8a9cc471d69a",
                 "shasum": ""
             },
             "require": {
                 "fuel/core": "^1.8 | dev-1.9/develop",
                 "fuel/orm": "^1.8 | dev-1.9/develop",
                 "php": ">=7.1",
-                "stwarog/uow": "^1.2.0"
+                "stwarog/uow": "^1.3"
             },
             "require-dev": {
+                "phpstan/phpstan": "^0.12.90",
                 "phpunit/phpunit": "7.1.3",
+                "squizlabs/php_codesniffer": "^3.6",
                 "symfony/var-dumper": "^5.1"
             },
             "type": "library",
@@ -924,7 +927,7 @@
                 }
             ],
             "description": "Unit of Work feature for Fuel's PHP ORM.",
-            "time": "2021-06-21T11:40:41+00:00"
+            "time": "2021-06-22T23:05:33+00:00"
         }
     ],
     "packages-dev": [
@@ -3069,7 +3072,6 @@
                     "type": "github"
                 }
             ],
-            "abandoned": true,
             "time": "2020-09-28T06:45:17+00:00"
         },
         {
