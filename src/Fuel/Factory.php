@@ -260,4 +260,20 @@ abstract class Factory implements FactoryContract
     {
         $this->customStates[$stateName] = $callable;
     }
+
+    final protected function fixture(string $stateName): FactoryContract
+    {
+        $state = $this->getState($stateName);
+
+        if ($state instanceof Reference) {
+            return $state->getFactory();
+        }
+
+        if (is_array($state)) {
+            [, $factory] = $state;
+            return $factory;
+        }
+
+        throw new OutOfStateBound("Requested state $stateName is not of a Reference type");
+    }
 }

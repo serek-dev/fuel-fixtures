@@ -114,6 +114,9 @@ final class FactoryTest extends TestCase
                     'factory' => ['relation', $this],
                     'factory_reference' => Reference::for('relation', $this),
                     'factory_many' => ['relation_many', $this],
+                    'not_existing_reference' => function (ModelImitation $model, array $attributes = []) {
+                        $this->fixture('fake');
+                    },
                 ];
             }
         };
@@ -655,5 +658,19 @@ final class FactoryTest extends TestCase
     {
         $expected = 2;
         $this->assertCount($expected, $factory);
+    }
+
+    /** @test */
+    public function fixture_notExistingState_throwsOutOfBoundException(): void
+    {
+        // Given factory
+        $factory = $this->getFactory();
+
+        // Except
+        $this->expectException(OutOfStateBound::class);
+        $this->expectExceptionMessage("Requested state fake is not of a Reference type");
+
+        // And state try to reach not existing state
+        $factory->with('not_existing_reference')->makeOne();
     }
 }
