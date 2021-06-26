@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Fuel;
 
+use Countable;
 use Orm\Model;
 use PHPUnit\Framework\TestCase;
 use Stwarog\FuelFixtures\Exceptions\OutOfStateBound;
@@ -27,6 +28,7 @@ final class FactoryTest extends TestCase
 
         // Then it should implement FactoryContract
         $this->assertInstanceOf(FactoryContract::class, $actual);
+        $this->assertInstanceOf(Countable::class, $actual);
         $this->assertNotNull($actual->getPersistence());
         $this->assertNotNull($actual->getFaker());
     }
@@ -619,5 +621,39 @@ final class FactoryTest extends TestCase
             $this->assertInstanceOf(ModelImitation::class, $related);
             $this->assertSame('fake', $related->body);
         }
+    }
+
+    /** @test */
+    public function with_stateAsCallable_willAddToStack(): FactoryContract
+    {
+        // Given factory
+        $factory = $this->getFactory();
+
+        // And defined states
+        $factory->with('fake');
+
+        // When custom callable added
+        $factory->with(function(ModelImitation $model, array $attributes = []) {
+            $this->assertSame('fake', $model->body, 'Change from fake state');
+            $model->status = '123';
+        });
+        // And makeOne called
+        /** @var ModelImitation $model */
+        $model = $factory->makeOne();
+
+        // Then status value should be assigned from custom callable
+        $this->assertSame('123', $model->status);
+
+        return $factory;
+    }
+
+    /**
+     * @test
+     * @depends with_stateAsCallable_willAddToStack
+     */
+    public function with_stateAsCallable_willIncreaseCount(FactoryContract $factory): void
+    {
+        $expected = 2;
+        $this->assertCount($expected, $factory);
     }
 }

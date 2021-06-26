@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Stwarog\FuelFixtures\Fuel;
 
-use Countable;
 use Faker\Generator;
 use Orm\Model;
 use OutOfBoundsException;
@@ -12,7 +11,7 @@ use Stwarog\FuelFixtures\Exceptions\OutOfStateBound;
 use Stwarog\FuelFixtures\Reference;
 use Stwarog\FuelFixtures\State;
 
-abstract class Factory implements FactoryContract, Countable
+abstract class Factory implements FactoryContract
 {
     private const IDS_STATE_KEY = '_ids';
 
@@ -103,6 +102,12 @@ abstract class Factory implements FactoryContract, Countable
     final public function with(...$states): FactoryContract
     {
         foreach ($states as $state) {
+            if (is_callable($state)) {
+                $stateName = 'custom_' . (string)(count($this) + 1);
+                $this->addCustomState($stateName, $state);
+                $this->addUsedState($stateName);
+                continue;
+            }
             $stateAsString = (string)$state;
 
             $chunks = explode('.', $stateAsString);

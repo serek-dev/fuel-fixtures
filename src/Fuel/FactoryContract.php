@@ -4,13 +4,20 @@ declare(strict_types=1);
 
 namespace Stwarog\FuelFixtures\Fuel;
 
+use Countable;
 use Faker\Generator;
 use Orm\Model;
 use Stwarog\FuelFixtures\Exceptions\ConflictException;
 use Stwarog\FuelFixtures\State;
 use Stwarog\FuelFixtures\Reference;
 
-interface FactoryContract
+# do not remove (phpstan)
+
+/**
+ * Interface FactoryContract
+ * Countable - should return currents states count
+ */
+interface FactoryContract extends Countable
 {
     public function __construct(?PersistenceContract $persistence = null, ?Generator $faker = null);
 
@@ -49,7 +56,7 @@ interface FactoryContract
     public function getStates(): array;
 
     /**
-     * @param string|State ...$states
+     * @param string|State|callable ...$states
      * @return static
      * @throws ConflictException
      */
