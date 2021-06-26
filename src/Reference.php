@@ -29,4 +29,9 @@ final class Reference
     {
         return [$this->property, $this->factory];
     }
+
+    public function getFactory(): FactoryContract
+    {
+        return $this->factory;
+    }
 }
