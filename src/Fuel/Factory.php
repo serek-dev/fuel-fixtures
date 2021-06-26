@@ -44,7 +44,7 @@ abstract class Factory implements FactoryContract
      * Creates new instance of factory based on the given one.
      *
      * @param FactoryContract $factory
-     * @return static
+     * @return static|self
      */
     final public static function from(FactoryContract $factory): self
     {
@@ -310,5 +310,10 @@ abstract class Factory implements FactoryContract
         }
 
         throw new OutOfStateBound("Requested state $stateName is not of a Reference type");
+    }
+
+    final protected function reference(string $property, string $fixture): Reference
+    {
+        return Reference::for($property, $fixture::from($this));
     }
 }

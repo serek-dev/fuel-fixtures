@@ -112,7 +112,7 @@ final class FactoryTest extends TestCase
                         $model->body = 'fake';
                     },
                     'factory' => ['relation', $this],
-                    'factory_reference' => Reference::for('relation', $this),
+                    'factory_reference' => $this->reference('relation', get_class($this)),
                     'factory_many' => ['relation_many', $this],
                     'not_existing_reference' => function (ModelImitation $model, array $attributes = []) {
                         $this->fixture('fake');
