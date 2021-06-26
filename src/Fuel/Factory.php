@@ -40,6 +40,12 @@ abstract class Factory implements FactoryContract
         return new static($persistence, $faker);
     }
 
+    /**
+     * Creates new instance of factory based on the given one.
+     *
+     * @param FactoryContract $factory
+     * @return static
+     */
     final public static function from(FactoryContract $factory): self
     {
         return self::initialize($factory->getPersistence(), $factory->getFaker());
@@ -199,12 +205,19 @@ abstract class Factory implements FactoryContract
         return $this->faker;
     }
 
+    /**
+     * Returns count of used states.
+     *
+     * @return int
+     */
     final public function count(): int
     {
         return count($this->usedStates);
     }
 
     /**
+     * Calls default method makeOne
+     *
      * @param array<string, mixed> $attributes
      * @return Model
      */
@@ -213,6 +226,12 @@ abstract class Factory implements FactoryContract
         return $this->makeOne($attributes);
     }
 
+    /**
+     * Generates random int number for given fields.
+     *
+     * @param string ...$fields
+     * @return $this
+     */
     final public function withIdsFor(string ...$fields): self
     {
         $this->addUsedState(self::IDS_STATE_KEY);
@@ -233,12 +252,20 @@ abstract class Factory implements FactoryContract
         return isset($this->usedStates[self::IDS_STATE_KEY]);
     }
 
+    /**
+     * Checks that defined states contains given state name.
+     *
+     * @param string $state
+     * @return bool
+     */
     final public function hasState(string $state): bool
     {
         return isset($this->getStates()[$state]);
     }
 
     /**
+     * Get state from defined states.
+     *
      * @param string $state
      * @return callable|array{0: string, 1: FactoryContract}|Reference
      * @throws OutOfBoundsException
@@ -261,6 +288,14 @@ abstract class Factory implements FactoryContract
         $this->customStates[$stateName] = $callable;
     }
 
+    /**
+     * Fetches fixture from the defined states.
+     * Throws exception when state is not defined
+     * or state is Reference type (or extractable from array).
+     *
+     * @param string $stateName
+     * @return FactoryContract
+     */
     final protected function fixture(string $stateName): FactoryContract
     {
         $state = $this->getState($stateName);
