@@ -13,6 +13,12 @@ use Stwarog\FuelFixtures\State;
 
 abstract class Factory implements FactoryContract
 {
+    /**
+     *  Basic state - should be minimal working model
+     *  with some mandatory and optional relations in.
+     */
+    public const BASIC = 'basic';
+
     private const IDS_STATE_KEY = '_ids';
 
     protected PersistenceContract $persistence;
@@ -312,6 +318,13 @@ abstract class Factory implements FactoryContract
         throw new OutOfStateBound("Requested state $stateName is not of a Reference type");
     }
 
+    /**
+     * Creates Reference instance for given string fixture.
+     *
+     * @param string $property
+     * @param string $fixture
+     * @return Reference
+     */
     final protected function reference(string $property, string $fixture): Reference
     {
         return Reference::for($property, $fixture::from($this));
