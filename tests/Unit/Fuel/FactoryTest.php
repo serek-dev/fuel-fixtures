@@ -673,4 +673,45 @@ final class FactoryTest extends TestCase
         // And state try to reach not existing state
         $factory->with('not_existing_reference')->makeOne();
     }
+
+    /** @test */
+    public function inUse_notExistingState_throwsOutOfBoundException(): void
+    {
+        // Given factory
+        $factory = $this->getFactory();
+
+        // Except
+        $this->expectException(OutOfStateBound::class);
+        $this->expectExceptionMessage("Attempted to reach 'not existing' but it does not exists");
+
+        // When asking for not existing state
+        $factory->inUse('not existing');
+    }
+
+    /** @test */
+    public function inUse_existingStateButNotUsed_returnsFalse(): void
+    {
+        // Given factory
+        $factory = $this->getFactory();
+
+        // When asking for existing state
+        $actual = $factory->inUse('fake');
+
+        // Then false should be returned
+        $this->assertFalse($actual);
+    }
+
+    /** @test */
+    public function inUse_existingStateUsed_returnsTrue(): void
+    {
+        // Given factory
+        $factory = $this->getFactory();
+
+        // When asking for existing state
+        $factory->with('fake');
+        $actual = $factory->inUse('fake');
+
+        // Then false should be returned
+        $this->assertTrue($actual);
+    }
 }

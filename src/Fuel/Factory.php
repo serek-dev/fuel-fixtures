@@ -329,4 +329,10 @@ abstract class Factory implements FactoryContract
     {
         return Reference::for($property, $fixture::from($this));
     }
+
+    final public function inUse(string $state): bool
+    {
+        $this->getState($state);
+        return isset($this->usedStates[$state]);
+    }
 }

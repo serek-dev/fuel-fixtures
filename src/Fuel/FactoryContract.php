@@ -86,5 +86,19 @@ interface FactoryContract extends Countable
 
     public function withIds(): bool;
 
+    /**
+     * Determines, whenever state exists in getStates method
+     *
+     * @param string $state
+     * @return bool
+     */
     public function hasState(string $state): bool;
+
+    /**
+     * Determines, requested state has been used
+     *
+     * @param string $state
+     * @return bool
+     */
+    public function inUse(string $state): bool;
 }
