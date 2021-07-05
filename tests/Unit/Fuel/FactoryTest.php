@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Fuel;
 
 use Countable;
+use Faker\Generator;
 use Orm\Model;
 use PHPUnit\Framework\TestCase;
 use Stwarog\FuelFixtures\Exceptions\OutOfStateBound;
@@ -29,8 +30,8 @@ final class FactoryTest extends TestCase
         // Then it should implement FactoryContract
         $this->assertInstanceOf(FactoryContract::class, $actual);
         $this->assertInstanceOf(Countable::class, $actual);
-        $this->assertNotNull($actual->getPersistence());
-        $this->assertNotNull($actual->getFaker());
+        $this->assertInstanceOf(FuelPersistence::class, $actual->getPersistence());
+        $this->assertInstanceOf(Generator::class, $actual->getFaker());
     }
 
     /** @test */
