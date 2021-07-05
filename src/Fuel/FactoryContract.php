@@ -101,4 +101,11 @@ interface FactoryContract extends Countable
      * @return bool
      */
     public function inUse(string $state): bool;
+
+    /**
+     * Returns name of the class, we are creating for
+     *
+     * @return string
+     */
+    public function __toString(): string;
 }

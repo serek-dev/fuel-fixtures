@@ -21,7 +21,7 @@ use Tests\Unit\Mocks\ModelImitation;
 final class FactoryTest extends TestCase
 {
     /** @test */
-    public function constructor(): void
+    public function constructor(): FactoryContract
     {
         // When initialized
         // Given factory
@@ -30,8 +30,29 @@ final class FactoryTest extends TestCase
         // Then it should implement FactoryContract
         $this->assertInstanceOf(FactoryContract::class, $actual);
         $this->assertInstanceOf(Countable::class, $actual);
-        $this->assertInstanceOf(FuelPersistence::class, $actual->getPersistence());
-        $this->assertInstanceOf(Generator::class, $actual->getFaker());
+
+        return $actual;
+    }
+
+    /**
+     * @test
+     * @depends constructor
+     * @param FactoryContract $factory
+     */
+    public function constructor_ShouldContainsDefaultFakerAndPersistence(FactoryContract $factory): void
+    {
+        $this->assertInstanceOf(FuelPersistence::class, $factory->getPersistence());
+        $this->assertInstanceOf(Generator::class, $factory->getFaker());
+    }
+
+    /**
+     * @test
+     * @depends constructor
+     * @param FactoryContract $factory
+     */
+    public function toString_shouldContainModelName(FactoryContract $factory): void
+    {
+        $this->assertSame(ModelImitation::class, (string)$factory);
     }
 
     /** @test */

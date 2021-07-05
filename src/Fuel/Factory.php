@@ -335,4 +335,9 @@ abstract class Factory implements FactoryContract
         $this->getState($state);
         return isset($this->usedStates[$state]);
     }
+
+    final public function __toString(): string
+    {
+        return static::getClass();
+    }
 }
