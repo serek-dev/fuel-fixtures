@@ -340,4 +340,9 @@ abstract class Factory implements FactoryContract
     {
         return static::getClass();
     }
+
+    public function reset(): void
+    {
+        $this->usedStates = $this->customStates = [];
+    }
 }

@@ -108,4 +108,6 @@ interface FactoryContract extends Countable
      * @return string
      */
     public function __toString(): string;
+
+    public function reset(): void;
 }

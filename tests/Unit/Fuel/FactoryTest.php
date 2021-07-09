@@ -736,4 +736,18 @@ final class FactoryTest extends TestCase
         // Then false should be returned
         $this->assertTrue($actual);
     }
+
+    /** @test */
+    public function reset_cleansUpUsedStatesAndCustomOnes(): void
+    {
+        // Given factory with two states
+        $factory = $this->getFactory();
+        $factory->with('fake', fn() => '');
+
+        // When reset invoked
+        $factory->reset();
+
+        // Then no states in use
+        $this->assertCount(0, $factory);
+    }
 }
