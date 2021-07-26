@@ -29,6 +29,7 @@ final class FactoryTest extends TestCase
 
         // Then it should implement FactoryContract
         $this->assertInstanceOf(FactoryContract::class, $actual);
+        $this->assertInstanceOf(PersistenceContract::class, $actual);
         $this->assertInstanceOf(Countable::class, $actual);
 
         return $actual;
@@ -749,5 +750,28 @@ final class FactoryTest extends TestCase
 
         // Then no states in use
         $this->assertCount(0, $factory);
+    }
+
+    public function persist_shouldPersistUsingPassedPersistence(): void
+    {
+        // Given persistence
+        $persistence = $this->createMock(PersistenceContract::class);
+
+        // And few models
+        $models = [
+            $model1 = new ModelImitation(),
+            $model2 = new ModelImitation(),
+        ];
+
+        // And persistence that should be called
+        $persistence->expects($this->exactly(2))
+            ->method('persist')
+            ->withConsecutive([$model1], [$model2]);
+
+        // And factory
+        $factory = $this->getFactory();
+
+        // When persist is called
+        $factory->persist(...$models);
     }
 }

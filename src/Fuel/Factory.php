@@ -345,4 +345,9 @@ abstract class Factory implements FactoryContract
     {
         $this->usedStates = $this->customStates = [];
     }
+
+    public function persist(Model ...$model): void
+    {
+        $this->getPersistence()->persist(...$model);
+    }
 }

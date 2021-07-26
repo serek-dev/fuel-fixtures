@@ -10,7 +10,7 @@ interface PersistenceContract
 {
     /**
      * Class should persist & flush changes into the DB source.
-     * @param Model<array> ...$proxy
+     * @param Model<array> ...$model
      */
-    public function persist(Model ...$proxy): void;
+    public function persist(Model ...$model): void;
 }

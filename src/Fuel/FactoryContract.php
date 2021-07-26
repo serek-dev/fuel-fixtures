@@ -17,7 +17,7 @@ use Stwarog\FuelFixtures\Reference;
  * Interface FactoryContract
  * Countable - should return currents states count
  */
-interface FactoryContract extends Countable
+interface FactoryContract extends Countable, PersistenceContract
 {
     public function __construct(?PersistenceContract $persistence = null, ?Generator $faker = null);
 
