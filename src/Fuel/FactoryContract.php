@@ -7,6 +7,7 @@ namespace Stwarog\FuelFixtures\Fuel;
 use Countable;
 use Faker\Generator;
 use Orm\Model;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Stwarog\FuelFixtures\Exceptions\ConflictException;
 use Stwarog\FuelFixtures\State;
 use Stwarog\FuelFixtures\Reference;
@@ -76,6 +77,8 @@ interface FactoryContract extends Countable, PersistenceContract
     public function getPersistence(): PersistenceContract;
 
     public function getFaker(): Generator;
+
+    public function getDispatcher(): EventDispatcherInterface;
 
     /**
      * Creates random ids for given fields. Should not be called only with "make" methods.

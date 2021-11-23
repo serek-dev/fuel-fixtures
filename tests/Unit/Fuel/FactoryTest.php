@@ -8,12 +8,13 @@ use Countable;
 use Faker\Generator;
 use Orm\Model;
 use PHPUnit\Framework\TestCase;
+use Psr\EventDispatcher\EventDispatcherInterface;
+use Stwarog\FuelFixtures\Events\NullObjectDispatcher;
 use Stwarog\FuelFixtures\Exceptions\OutOfStateBound;
 use Stwarog\FuelFixtures\Fuel\Factory;
 use Stwarog\FuelFixtures\Fuel\FactoryContract;
 use Stwarog\FuelFixtures\Fuel\FuelPersistence;
 use Stwarog\FuelFixtures\Fuel\PersistenceContract;
-use Stwarog\FuelFixtures\Reference;
 use Stwarog\FuelFixtures\State;
 use Tests\Unit\Mocks\ModelImitation;
 
@@ -40,10 +41,12 @@ final class FactoryTest extends TestCase
      * @depends constructor
      * @param FactoryContract $factory
      */
-    public function constructor_ShouldContainsDefaultFakerAndPersistence(FactoryContract $factory): void
+    public function constructor_ShouldContainsDefaultDependencyInstances(FactoryContract $factory): void
     {
         $this->assertInstanceOf(FuelPersistence::class, $factory->getPersistence());
         $this->assertInstanceOf(Generator::class, $factory->getFaker());
+        $this->assertInstanceOf(EventDispatcherInterface::class, $factory->getDispatcher());
+        $this->assertInstanceOf(NullObjectDispatcher::class, $factory->getDispatcher());
     }
 
     /**
@@ -98,15 +101,23 @@ final class FactoryTest extends TestCase
             ->method('getFaker')
             ->willReturn($faker);
 
+        // And dispatcher
+        $dispatcher = new NullObjectDispatcher();
+        $relatedFactory->expects($this->once())
+            ->method('getDispatcher')
+            ->willReturn($dispatcher);
+
         // When factory create from related factory
         $factory = $this->getFactory();
         $factoryClass = get_class($factory);
 
+        /** @var FactoryContract $newFactory */
         $newFactory = $factoryClass::from($relatedFactory);
 
-        // Then new class should have the some persistence and faker
+        // Then new class should have the same persistence and faker
         $this->assertSame($faker, $newFactory->getFaker());
         $this->assertSame($persistence, $newFactory->getPersistence());
+        $this->assertSame($dispatcher, $newFactory->getDispatcher());
     }
 
     public function getFactory(): Factory
@@ -659,7 +670,7 @@ final class FactoryTest extends TestCase
         $factory->with('fake');
 
         // When custom callable added
-        $factory->with(function(ModelImitation $model, array $attributes = []) {
+        $factory->with(function (ModelImitation $model, array $attributes = []) {
             $this->assertSame('fake', $model->body, 'Change from fake state');
             $model->status = '123';
         });

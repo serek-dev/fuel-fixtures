@@ -7,6 +7,8 @@ namespace Stwarog\FuelFixtures\Fuel;
 use Faker\Generator;
 use Orm\Model;
 use OutOfBoundsException;
+use Psr\EventDispatcher\EventDispatcherInterface;
+use Stwarog\FuelFixtures\Events\NullObjectDispatcher;
 use Stwarog\FuelFixtures\Exceptions\OutOfStateBound;
 use Stwarog\FuelFixtures\Reference;
 use Stwarog\FuelFixtures\State;
@@ -23,6 +25,7 @@ abstract class Factory implements FactoryContract
 
     protected PersistenceContract $persistence;
     protected Generator $faker;
+    protected EventDispatcherInterface $dispatcher;
 
     /**
      * @var array<string, array> - key = stateName, value = attributes
@@ -32,18 +35,31 @@ abstract class Factory implements FactoryContract
     /** @var array<string, mixed|callable> */
     private array $customStates = [];
 
-    public function __construct(?PersistenceContract $persistence = null, ?Generator $faker = null)
-    {
+    public function __construct(
+        ?PersistenceContract $persistence = null,
+        ?Generator $faker = null,
+        ?EventDispatcherInterface $dispatcher = null
+    ) {
         $this->persistence = $persistence ?? new FuelPersistence();
         $this->faker = $faker ?? \Faker\Factory::create();
+        $this->dispatcher = $dispatcher ?? new NullObjectDispatcher();
     }
 
     /**
      * @return static|self
      */
-    final public static function initialize(?PersistenceContract $persistence = null, ?Generator $faker = null): self
+    final public static function initialize(
+        ?PersistenceContract $persistence = null,
+        ?Generator $faker = null,
+        ?EventDispatcherInterface $dispatcher = null
+    ): self
     {
-        return new static($persistence, $faker);
+        return new static($persistence, $faker, $dispatcher);
+    }
+
+    public function getDispatcher(): EventDispatcherInterface
+    {
+        return $this->dispatcher;
     }
 
     /**
@@ -54,7 +70,7 @@ abstract class Factory implements FactoryContract
      */
     final public static function from(FactoryContract $factory): self
     {
-        return self::initialize($factory->getPersistence(), $factory->getFaker());
+        return self::initialize($factory->getPersistence(), $factory->getFaker(), $factory->getDispatcher());
     }
 
     /** @inheritDoc */
