@@ -9,6 +9,7 @@ use Faker\Generator;
 use Orm\Model;
 use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Stwarog\FuelFixtures\Events\ModelPrepared;
 use Stwarog\FuelFixtures\Events\NullObjectDispatcher;
 use Stwarog\FuelFixtures\Exceptions\OutOfStateBound;
 use Stwarog\FuelFixtures\Fuel\Factory;
@@ -120,9 +121,12 @@ final class FactoryTest extends TestCase
         $this->assertSame($dispatcher, $newFactory->getDispatcher());
     }
 
-    public function getFactory(): Factory
-    {
-        return new class extends Factory {
+    public function getFactory(
+        ?PersistenceContract $persistence = null,
+        ?Generator $faker = null,
+        ?EventDispatcherInterface $dispatcher = null
+    ): Factory {
+        return new class($persistence, $faker, $dispatcher) extends Factory {
             public function getDefaults(): array
             {
                 return [
@@ -784,5 +788,24 @@ final class FactoryTest extends TestCase
 
         // When persist is called
         $factory->persist(...$models);
+    }
+
+    /** @test */
+    public function makeOne_shouldDispatchModelPreparedEvent(): void
+    {
+        // Given dispatcher that should be called
+        $dispatcher = $this->createMock(EventDispatcherInterface::class);
+        $dispatcher->expects($this->once())
+            ->method('dispatch')
+            ->willReturnCallback(function (object $e) {
+                $this->assertInstanceOf(ModelPrepared::class, $e);
+                $this->assertInstanceOf(ModelImitation::class, $e->getModel());
+            });
+
+        // and Factory
+        $factory = $this->getFactory(null, null, $dispatcher);
+
+        // When makeOne is called
+        $factory->makeOne();
     }
 }

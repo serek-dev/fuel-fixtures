@@ -8,6 +8,7 @@ use Faker\Generator;
 use Orm\Model;
 use OutOfBoundsException;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Stwarog\FuelFixtures\Events\ModelPrepared;
 use Stwarog\FuelFixtures\Events\NullObjectDispatcher;
 use Stwarog\FuelFixtures\Exceptions\OutOfStateBound;
 use Stwarog\FuelFixtures\Reference;
@@ -52,8 +53,7 @@ abstract class Factory implements FactoryContract
         ?PersistenceContract $persistence = null,
         ?Generator $faker = null,
         ?EventDispatcherInterface $dispatcher = null
-    ): self
-    {
+    ): self {
         return new static($persistence, $faker, $dispatcher);
     }
 
@@ -90,6 +90,8 @@ abstract class Factory implements FactoryContract
             $closure = $allStates[$stateName];
             $closure($model, !empty($stateAttributes) ? $stateAttributes : $attributes);
         }
+
+        $this->dispatcher->dispatch(new ModelPrepared($model));
 
         return $model;
     }
