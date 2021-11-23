@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d63368f8baa9347ccb1c619d5709f5c5",
+    "content-hash": "acda2d505af591fa5ea55496fb032603",
     "packages": [
         {
             "name": "composer/installers",
@@ -709,6 +709,56 @@
             "time": "2021-06-12T12:12:59+00:00"
         },
         {
+            "name": "psr/event-dispatcher",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/event-dispatcher.git",
+                "reference": "dbefd12671e8a14ec7f180cab83036ed26714bb0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/event-dispatcher/zipball/dbefd12671e8a14ec7f180cab83036ed26714bb0",
+                "reference": "dbefd12671e8a14ec7f180cab83036ed26714bb0",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Psr\\EventDispatcher\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "http://www.php-fig.org/"
+                }
+            ],
+            "description": "Standard interfaces for event handling.",
+            "keywords": [
+                "events",
+                "psr",
+                "psr-14"
+            ],
+            "support": {
+                "issues": "https://github.com/php-fig/event-dispatcher/issues",
+                "source": "https://github.com/php-fig/event-dispatcher/tree/1.0.0"
+            },
+            "time": "2019-01-08T18:20:26+00:00"
+        },
+        {
             "name": "psr/log",
             "version": "1.1.4",
             "source": {
@@ -999,247 +1049,6 @@
                 }
             ],
             "time": "2020-11-10T18:47:58+00:00"
-        },
-        {
-            "name": "fuel/auth",
-            "version": "1.8.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/fuel/auth.git",
-                "reference": "908ab91344875ec17e58458c1e48f0ce482a337b"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/fuel/auth/zipball/908ab91344875ec17e58458c1e48f0ce482a337b",
-                "reference": "908ab91344875ec17e58458c1e48f0ce482a337b",
-                "shasum": ""
-            },
-            "require": {
-                "composer/installers": "~1.0"
-            },
-            "type": "fuel-package",
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "FuelPHP Development Team",
-                    "email": "team@fuelphp.com"
-                }
-            ],
-            "description": "FuelPHP 1.x Auth Package",
-            "homepage": "https://github.com/fuel/auth",
-            "time": "2019-06-27T14:59:18+00:00"
-        },
-        {
-            "name": "fuel/email",
-            "version": "1.8.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/fuel/email.git",
-                "reference": "b7fb81332d373594c370f12706cd7108ca1d01be"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/fuel/email/zipball/b7fb81332d373594c370f12706cd7108ca1d01be",
-                "reference": "b7fb81332d373594c370f12706cd7108ca1d01be",
-                "shasum": ""
-            },
-            "require": {
-                "composer/installers": "~1.0"
-            },
-            "type": "fuel-package",
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "FuelPHP Development Team",
-                    "email": "team@fuelphp.com"
-                }
-            ],
-            "description": "FuelPHP 1.x Email Package",
-            "homepage": "https://github.com/fuel/email",
-            "time": "2019-06-27T14:58:38+00:00"
-        },
-        {
-            "name": "fuel/fuel",
-            "version": "1.8.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/fuel/fuel.git",
-                "reference": "f35497969f9ec348a87fcc2d1dc853a7c18d183d"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/fuel/fuel/zipball/f35497969f9ec348a87fcc2d1dc853a7c18d183d",
-                "reference": "f35497969f9ec348a87fcc2d1dc853a7c18d183d",
-                "shasum": ""
-            },
-            "require": {
-                "composer/installers": "~1.0",
-                "fuel/auth": "1.8.*",
-                "fuel/core": "1.8.*",
-                "fuel/email": "1.8.*",
-                "fuel/oil": "1.8.*",
-                "fuel/orm": "1.8.*",
-                "fuel/parser": "1.8.*",
-                "fuelphp/upload": "2.0.6",
-                "php": ">=5.4"
-            },
-            "require-dev": {
-                "fuel/docs": "1.8.*"
-            },
-            "suggest": {
-                "dwoo/dwoo": "Allow Dwoo templating with the Parser package",
-                "mthaml/mthaml": "Allow Haml templating with Twig supports with the Parser package",
-                "mustache/mustache": "Allow Mustache templating with the Parser package",
-                "pyrocms/lex": "Allow Lex templating with the Parser package",
-                "smarty/smarty": "Allow Smarty templating with the Parser package",
-                "twig/twig": "Allow Twig templating with the Parser package",
-                "zordius/lightncandy": "Allow Handlebars templating with an extremely fast PHP implementation of handlebars"
-            },
-            "type": "project",
-            "extra": {
-                "installer-paths": {
-                    "fuel/{$name}": [
-                        "fuel/core"
-                    ],
-                    "{$name}": [
-                        "fuel/docs"
-                    ]
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "FuelPHP is a simple, flexible, community driven PHP 5.4+ framework, based on the best ideas of other frameworks, with a fresh start!",
-            "keywords": [
-                "PHP7",
-                "application",
-                "development",
-                "framework",
-                "php",
-                "website"
-            ],
-            "time": "2019-06-27T16:03:00+00:00"
-        },
-        {
-            "name": "fuel/oil",
-            "version": "1.8.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/fuel/oil.git",
-                "reference": "8d3685c592e7a5161d29fc7a03ed61dacdada595"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/fuel/oil/zipball/8d3685c592e7a5161d29fc7a03ed61dacdada595",
-                "reference": "8d3685c592e7a5161d29fc7a03ed61dacdada595",
-                "shasum": ""
-            },
-            "require": {
-                "composer/installers": "~1.0"
-            },
-            "type": "fuel-package",
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "FuelPHP Development Team",
-                    "email": "team@fuelphp.com"
-                }
-            ],
-            "description": "FuelPHP 1.x Oil Package",
-            "homepage": "https://github.com/fuel/oil",
-            "time": "2019-06-27T14:58:13+00:00"
-        },
-        {
-            "name": "fuel/parser",
-            "version": "1.8.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/fuel/parser.git",
-                "reference": "1e4c52b60dec72a4df6d3757db74904ab7cda9ef"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/fuel/parser/zipball/1e4c52b60dec72a4df6d3757db74904ab7cda9ef",
-                "reference": "1e4c52b60dec72a4df6d3757db74904ab7cda9ef",
-                "shasum": ""
-            },
-            "require": {
-                "composer/installers": "~1.0"
-            },
-            "type": "fuel-package",
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "FuelPHP Development Team",
-                    "email": "team@fuelphp.com"
-                }
-            ],
-            "description": "FuelPHP 1.x Parser Package",
-            "homepage": "https://github.com/fuel/parser",
-            "time": "2019-06-27T14:57:06+00:00"
-        },
-        {
-            "name": "fuelphp/upload",
-            "version": "2.0.6",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/fuelphp/upload.git",
-                "reference": "73b3abfa317c22d6b4d63588e9601c13623ea6f6"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/fuelphp/upload/zipball/73b3abfa317c22d6b4d63588e9601c13623ea6f6",
-                "reference": "73b3abfa317c22d6b4d63588e9601c13623ea6f6",
-                "shasum": ""
-            },
-            "require": {
-                "ext-fileinfo": "*",
-                "php": ">=5.3"
-            },
-            "require-dev": {
-                "codeception/codeception": "~2.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.0-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Fuel\\Upload\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "FuelPHP Development Team",
-                    "email": "team@fuelphp.com"
-                }
-            ],
-            "description": "Process uploaded files",
-            "homepage": "https://github.com/fuelphp/upload",
-            "keywords": [
-                "file uploads",
-                "upload"
-            ],
-            "time": "2015-11-04T17:19:56+00:00"
         },
         {
             "name": "myclabs/deep-copy",
@@ -3428,5 +3237,5 @@
         "php": "7.4.* || 8.*"
     },
     "platform-dev": [],
-    "plugin-api-version": "1.1.0"
+    "plugin-api-version": "2.1.0"
 }
