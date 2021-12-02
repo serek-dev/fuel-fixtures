@@ -9,7 +9,8 @@ use Faker\Generator;
 use Orm\Model;
 use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\EventDispatcherInterface;
-use Stwarog\FuelFixtures\Events\ModelPrepared;
+use Stwarog\FuelFixtures\Events\AfterPrepared;
+use Stwarog\FuelFixtures\Events\BeforePrepared;
 use Stwarog\FuelFixtures\Events\NullObjectDispatcher;
 use Stwarog\FuelFixtures\Exceptions\OutOfStateBound;
 use Stwarog\FuelFixtures\Fuel\Factory;
@@ -791,21 +792,42 @@ final class FactoryTest extends TestCase
     }
 
     /** @test */
-    public function makeOne_shouldDispatchModelPreparedEvent(): void
+    public function makeOne_shouldDispatchModelEvents(): void
     {
         // Given dispatcher that should be called
-        $dispatcher = $this->createMock(EventDispatcherInterface::class);
-        $dispatcher->expects($this->once())
-            ->method('dispatch')
-            ->willReturnCallback(function (object $e) {
-                $this->assertInstanceOf(ModelPrepared::class, $e);
-                $this->assertInstanceOf(ModelImitation::class, $e->getModel());
-            });
+        $dispatcher = $this->getDispatcher();
 
         // and Factory
         $factory = $this->getFactory(null, null, $dispatcher);
 
         // When makeOne is called
         $factory->makeOne();
+
+        // Then expected events should be dispatcher
+        if (property_exists($dispatcher, 'events')) {
+            $this->assertCount(2, $dispatcher->events);
+
+            $event1 = $dispatcher->events[0];
+            $event2 = $dispatcher->events[1];
+
+            $this->assertInstanceOf(BeforePrepared::class, $event1);
+            $this->assertInstanceOf(ModelImitation::class, $event1->getModel());
+            $this->assertInstanceOf(AfterPrepared::class, $event2);
+            $this->assertInstanceOf(ModelImitation::class, $event2->getModel());
+        }
+    }
+
+    private function getDispatcher(): EventDispatcherInterface
+    {
+        return new class implements EventDispatcherInterface
+        {
+            public array $events = [];
+
+            public function dispatch(object $event): object
+            {
+                $this->events[] = $event;
+                return $event;
+            }
+        };
     }
 }

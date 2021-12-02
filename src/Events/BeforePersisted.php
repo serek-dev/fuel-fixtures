@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Stwarog\FuelFixtures\Events;
 
 /**
- * Class ModelCreated
- * Should be dispatcher in FactoryContract > makeOne
+ * Class ModelPersisted
+ * Should be dispatched in PersistenceContract > persist
  */
-final class ModelPrepared
+final class BeforePersisted
 {
-    public const NAME = 'model.prepared';
+    public const NAME = 'model.before.persisted';
 
     private object $model;
 

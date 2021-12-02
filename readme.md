@@ -127,5 +127,22 @@ make # to execute all mandatory quality check commands
 
 **If you can't run make file locally, then checkout the direct commands in composer.json.**
 
+### Events
+
+There is an abstraction of event dispatcher [PSR-14](https://www.php-fig.org/psr/psr-14/) with NullObject implementation by default.
+
+The intention is to add a capability to modify prepared model data in concrete situations, from the outside.
+
+You can initialize concrete dispatcher by dependency and then access predefined events:
+
+Name | Class | Description
+--- | --- | --- 
+| model.before.prepared | BeforePrepared | Called right before any states (closures) has been applied. |
+| model.after.prepared | AfterPrepared | Called right after all states (closures) has been applied and before persistence event. |
+| model.before.persisted | BeforePersisted | Called right before prepared model is persisted in DB e.g. classes UowPersistence, FuelPersistence. |
+| model.after.persisted | AfterPersisted | Called right after prepared model is persisted in DB. |
+
 ## Change Log
-...
+
+1.1.0 (2021-12-02)
+- Added event dispatcher abstraction, and events: BeforePersisted, ModelPrepared

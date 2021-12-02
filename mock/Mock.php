@@ -10,9 +10,13 @@ if (!class_exists('Orm\Model')) {
     {
         private array $_data;
 
+        protected static $_primary_key = ['id'];
+        private bool $isNew;
+
         public function __construct($data = [], $new = true, $view = null, $cache = true)
         {
             $this->_data = $data;
+            $this->isNew = $new;
         }
 
         public function current()
@@ -47,6 +51,9 @@ if (!class_exists('Orm\Model')) {
 
         public function offsetGet($offset)
         {
+            if ($offset === 'id') {
+                return rand(1, 1000);
+            }
             return $this->_data[$offset];
         }
 
@@ -78,6 +85,38 @@ if (!class_exists('Orm\Model')) {
         public function __get($name)
         {
             return $this->offsetGet($name);
+        }
+
+        /**
+         * Get the primary key(s) of this class
+         *
+         * @return  array
+         */
+        public static function primary_key()
+        {
+            return static::$_primary_key;
+        }
+
+        /**
+         * Provide the identifying details in the form of an array
+         *
+         * @return array
+         */
+        public function get_pk_assoc()
+        {
+            $array = array_flip(static::primary_key());
+
+            foreach ($array as $key => &$value)
+            {
+                $value = rand(1, 1000);
+            }
+
+            return $array;
+        }
+
+        public function is_new()
+        {
+            return $this->isNew;
         }
     }
 }

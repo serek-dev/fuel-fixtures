@@ -28,7 +28,7 @@ interface FactoryContract extends Countable, PersistenceContract
     public function getDefaults(): array;
 
     /**
-     * Should dispatch Event\ModelPrepared
+     * Should dispatch Event\AfterPrepared
      *
      * @param array<string, mixed> $attributes
      * @return Model<array>

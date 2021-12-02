@@ -8,7 +8,8 @@ use Faker\Generator;
 use Orm\Model;
 use OutOfBoundsException;
 use Psr\EventDispatcher\EventDispatcherInterface;
-use Stwarog\FuelFixtures\Events\ModelPrepared;
+use Stwarog\FuelFixtures\Events\AfterPrepared;
+use Stwarog\FuelFixtures\Events\BeforePrepared;
 use Stwarog\FuelFixtures\Events\NullObjectDispatcher;
 use Stwarog\FuelFixtures\Exceptions\OutOfStateBound;
 use Stwarog\FuelFixtures\Reference;
@@ -85,13 +86,15 @@ abstract class Factory implements FactoryContract
         $customStates = $this->customStates;
         $allStates = array_merge($definedStates, $customStates);
 
+        $this->dispatcher->dispatch(new BeforePrepared($model));
+
         // apply all closures
         foreach ($this->usedStates as $stateName => $stateAttributes) {
             $closure = $allStates[$stateName];
             $closure($model, !empty($stateAttributes) ? $stateAttributes : $attributes);
         }
 
-        $this->dispatcher->dispatch(new ModelPrepared($model));
+        $this->dispatcher->dispatch(new AfterPrepared($model));
 
         return $model;
     }
