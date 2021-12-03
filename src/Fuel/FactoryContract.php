@@ -12,6 +12,7 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use Stwarog\FuelFixtures\DependencyInjection\Config;
 use Stwarog\FuelFixtures\Exceptions\ConflictException;
 use Stwarog\FuelFixtures\State;
+use Stwarog\FuelFixtures\Reference;
 
 # do not remove (phpstan)
 

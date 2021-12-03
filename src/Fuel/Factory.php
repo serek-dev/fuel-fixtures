@@ -7,7 +7,9 @@ namespace Stwarog\FuelFixtures\Fuel;
 use Faker\Generator;
 use Orm\Model;
 use OutOfBoundsException;
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Stwarog\FuelFixtures\DependencyInjection\Config;
 use Stwarog\FuelFixtures\DependencyInjection\ConfigContract;
@@ -355,9 +357,14 @@ abstract class Factory implements FactoryContract
      * @param string $property
      * @param string $fixture
      * @return Reference
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     final protected function reference(string $property, string $fixture): Reference
     {
+        if ($this->container->has($fixture)) {
+            return Reference::for($property, $this->container->get($fixture));
+        }
         return Reference::for($property, $fixture::from($this));
     }
 

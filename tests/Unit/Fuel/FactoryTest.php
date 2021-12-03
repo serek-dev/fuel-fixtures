@@ -8,6 +8,7 @@ use Countable;
 use Faker\Generator;
 use Orm\Model;
 use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Stwarog\FuelFixtures\DependencyInjection\Config;
 use Stwarog\FuelFixtures\Events\AfterPrepared;
@@ -126,10 +127,11 @@ final class FactoryTest extends TestCase
     public function getFactory(
         ?PersistenceContract $persistence = null,
         ?Generator $faker = null,
-        ?EventDispatcherInterface $dispatcher = null
+        ?EventDispatcherInterface $dispatcher = null,
+        ?ContainerInterface $container = null
     ): Factory
     {
-        $config = new Config($persistence, $faker, $dispatcher);
+        $config = new Config($persistence, $faker, $dispatcher, $container);
 
         return new class($config) extends Factory {
             public function getDefaults(): array
@@ -585,6 +587,33 @@ final class FactoryTest extends TestCase
 
         // When with factory (relation reference) states called makeOne
         $factory->with("$state.fake");
+        /** @var ModelImitation $model */
+        $model = $factory->makeOne();
+
+        // Then nested relation should be called with default values
+        $this->assertNotEmpty($model->relation);
+        $this->assertInstanceOf(ModelImitation::class, $model->relation);
+        $this->assertSame('fake', $model->relation->body);
+    }
+
+    /** @test */
+    public function with_referenceThatExistsInContainer_shouldFetchFromContainer(): void
+    {
+        // Given Container that has related entry
+        $container = $this->createMock(ContainerInterface::class);
+        $container->expects($this->exactly(6))->method('has')->willReturn(true);
+        $container->expects($this->exactly(6))->method('get')->willReturn($this->getFactory());
+
+        // Given factory
+        $factory = $this->getFactory(
+            null,
+            null,
+            null,
+            $container
+        );
+
+        // When with factory (relation reference) states called makeOne
+        $factory->with('factory_reference.fake');
         /** @var ModelImitation $model */
         $model = $factory->makeOne();
 

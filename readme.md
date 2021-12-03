@@ -104,7 +104,7 @@ Sample call using `with`:
 ### Standards
 This package follows PSR-4 for autoloading and PSR-12 for styling.
 
-### Usefull commands
+### Useful commands
 The whole project is Unit tested and protected with strong static code analytics (phpstan).
 ```bash
 make unit # for unit testing
@@ -148,6 +148,8 @@ You can initialize concrete dispatcher by dependency and then access predefined 
 
 - Refactor - added Config for Factory Dependency as amount of it grows up to quickly
 - Added PSR container dependency
+- Fixed Reference type (in getStates), to be aware of Container and avoid re-creating new instance if entry is present
+  as DI
 
 1.1.0 (2021-12-02)
 
