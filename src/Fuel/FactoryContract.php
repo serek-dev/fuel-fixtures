@@ -7,10 +7,11 @@ namespace Stwarog\FuelFixtures\Fuel;
 use Countable;
 use Faker\Generator;
 use Orm\Model;
+use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Stwarog\FuelFixtures\DependencyInjection\Config;
 use Stwarog\FuelFixtures\Exceptions\ConflictException;
 use Stwarog\FuelFixtures\State;
-use Stwarog\FuelFixtures\Reference;
 
 # do not remove (phpstan)
 
@@ -20,7 +21,7 @@ use Stwarog\FuelFixtures\Reference;
  */
 interface FactoryContract extends Countable, PersistenceContract
 {
-    public function __construct(?PersistenceContract $persistence = null, ?Generator $faker = null);
+    public function __construct(Config $config);
 
     /**
      * @return array<string, mixed>
@@ -74,7 +75,7 @@ interface FactoryContract extends Countable, PersistenceContract
     /**
      * @return static
      */
-    public static function initialize(?PersistenceContract $persistence = null, ?Generator $faker = null): self;
+    public static function initialize(Config $config): self;
 
     public function getPersistence(): PersistenceContract;
 
@@ -115,4 +116,6 @@ interface FactoryContract extends Countable, PersistenceContract
     public function __toString(): string;
 
     public function reset(): void;
+
+    public function getContainer(): ContainerInterface;
 }

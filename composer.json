@@ -6,7 +6,8 @@
         "php": "7.4.* || 8.*",
         "fzaninotto/faker": "^1.9",
         "stwarog/uow-fuel": "^1.4.0",
-        "psr/event-dispatcher": "^1.0"
+        "psr/event-dispatcher": "^1.0",
+        "psr/container": "^2.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.5",

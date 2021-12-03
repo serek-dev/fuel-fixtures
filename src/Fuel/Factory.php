@@ -7,10 +7,12 @@ namespace Stwarog\FuelFixtures\Fuel;
 use Faker\Generator;
 use Orm\Model;
 use OutOfBoundsException;
+use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Stwarog\FuelFixtures\DependencyInjection\Config;
+use Stwarog\FuelFixtures\DependencyInjection\ConfigContract;
 use Stwarog\FuelFixtures\Events\AfterPrepared;
 use Stwarog\FuelFixtures\Events\BeforePrepared;
-use Stwarog\FuelFixtures\Events\NullObjectDispatcher;
 use Stwarog\FuelFixtures\Exceptions\OutOfStateBound;
 use Stwarog\FuelFixtures\Reference;
 use Stwarog\FuelFixtures\State;
@@ -28,6 +30,7 @@ abstract class Factory implements FactoryContract
     protected PersistenceContract $persistence;
     protected Generator $faker;
     protected EventDispatcherInterface $dispatcher;
+    protected ContainerInterface $container;
 
     /**
      * @var array<string, array> - key = stateName, value = attributes
@@ -37,25 +40,20 @@ abstract class Factory implements FactoryContract
     /** @var array<string, mixed|callable> */
     private array $customStates = [];
 
-    public function __construct(
-        ?PersistenceContract $persistence = null,
-        ?Generator $faker = null,
-        ?EventDispatcherInterface $dispatcher = null
-    ) {
-        $this->persistence = $persistence ?? new FuelPersistence();
-        $this->faker = $faker ?? \Faker\Factory::create();
-        $this->dispatcher = $dispatcher ?? new NullObjectDispatcher();
+    public function __construct(ConfigContract $config)
+    {
+        $this->persistence = $config->getPersistence();
+        $this->faker = $config->getFaker();
+        $this->dispatcher = $config->getDispatcher();
+        $this->container = $config->getContainer();
     }
 
     /**
      * @return static|self
      */
-    final public static function initialize(
-        ?PersistenceContract $persistence = null,
-        ?Generator $faker = null,
-        ?EventDispatcherInterface $dispatcher = null
-    ): self {
-        return new static($persistence, $faker, $dispatcher);
+    final public static function initialize(Config $config): self
+    {
+        return new static($config);
     }
 
     public function getDispatcher(): EventDispatcherInterface
@@ -71,7 +69,14 @@ abstract class Factory implements FactoryContract
      */
     final public static function from(FactoryContract $factory): self
     {
-        return self::initialize($factory->getPersistence(), $factory->getFaker(), $factory->getDispatcher());
+        return self::initialize(
+            new Config(
+                $factory->getPersistence(),
+                $factory->getFaker(),
+                $factory->getDispatcher(),
+                $factory->getContainer()
+            )
+        );
     }
 
     /** @inheritDoc */
@@ -225,6 +230,11 @@ abstract class Factory implements FactoryContract
     final public function getPersistence(): PersistenceContract
     {
         return $this->persistence;
+    }
+
+    final public function getContainer(): ContainerInterface
+    {
+        return $this->container;
     }
 
     final public function getFaker(): Generator

@@ -9,6 +9,7 @@ use Faker\Generator;
 use Orm\Model;
 use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Stwarog\FuelFixtures\DependencyInjection\Config;
 use Stwarog\FuelFixtures\Events\AfterPrepared;
 use Stwarog\FuelFixtures\Events\BeforePrepared;
 use Stwarog\FuelFixtures\Events\NullObjectDispatcher;
@@ -76,7 +77,7 @@ final class FactoryTest extends TestCase
         $faker = \Faker\Factory::create();
 
         // When factory created
-        $newFactory = new $factoryClass($persistence, $faker);
+        $newFactory = new $factoryClass(new Config($persistence, $faker));
 
         // Then new class should have the some persistence and faker
         $this->assertSame($faker, $newFactory->getFaker());
@@ -126,8 +127,11 @@ final class FactoryTest extends TestCase
         ?PersistenceContract $persistence = null,
         ?Generator $faker = null,
         ?EventDispatcherInterface $dispatcher = null
-    ): Factory {
-        return new class($persistence, $faker, $dispatcher) extends Factory {
+    ): Factory
+    {
+        $config = new Config($persistence, $faker, $dispatcher);
+
+        return new class($config) extends Factory {
             public function getDefaults(): array
             {
                 return [
@@ -803,7 +807,7 @@ final class FactoryTest extends TestCase
         // When makeOne is called
         $factory->makeOne();
 
-        // Then expected events should be dispatcher
+        // Then expected events should be dispatched
         if (property_exists($dispatcher, 'events')) {
             $this->assertCount(2, $dispatcher->events);
 
