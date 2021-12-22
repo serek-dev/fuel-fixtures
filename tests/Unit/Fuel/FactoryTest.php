@@ -20,6 +20,7 @@ use Stwarog\FuelFixtures\Fuel\FactoryContract;
 use Stwarog\FuelFixtures\Fuel\FuelPersistence;
 use Stwarog\FuelFixtures\Fuel\PersistenceContract;
 use Stwarog\FuelFixtures\State;
+use Tests\Unit\Mocks\Fixture;
 use Tests\Unit\Mocks\ModelImitation;
 
 /** @covers \Stwarog\FuelFixtures\Fuel\Factory */
@@ -129,42 +130,9 @@ final class FactoryTest extends TestCase
         ?Generator $faker = null,
         ?EventDispatcherInterface $dispatcher = null,
         ?ContainerInterface $container = null
-    ): Factory
-    {
+    ): Factory {
         $config = new Config($persistence, $faker, $dispatcher, $container);
-
-        return new class($config) extends Factory {
-            public function getDefaults(): array
-            {
-                return [
-                    'id' => 'id',
-                    'status' => 'status',
-                    'body' => 'body',
-                    'relation' => null
-                ];
-            }
-
-            public static function getClass(): string
-            {
-                return ModelImitation::class;
-            }
-
-            /** @inheritDoc */
-            public function getStates(): array
-            {
-                return [
-                    'fake' => static function (ModelImitation $model, array $attributes = []) {
-                        $model->body = 'fake';
-                    },
-                    'factory' => ['relation', $this],
-                    'factory_reference' => $this->reference('relation', get_class($this)),
-                    'factory_many' => ['relation_many', $this],
-                    'not_existing_reference' => function (ModelImitation $model, array $attributes = []) {
-                        $this->fixture('fake');
-                    },
-                ];
-            }
-        };
+        return new Fixture($config);
     }
 
     /** @test */
@@ -852,8 +820,7 @@ final class FactoryTest extends TestCase
 
     private function getDispatcher(): EventDispatcherInterface
     {
-        return new class implements EventDispatcherInterface
-        {
+        return new class implements EventDispatcherInterface {
             public array $events = [];
 
             public function dispatch(object $event): object
