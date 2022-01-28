@@ -147,6 +147,7 @@ You can initialize concrete dispatcher by dependency and then access predefined 
 2.0.0 (2021-01-28)
 
 - upgrade to PHP8 + uow fuel v2.0 usage
+- droped support for fzaninotto/faker, replaced with phpfaker 
 
 1.2.0 (2021-12-02) **BREAKING CHANGE**
 
