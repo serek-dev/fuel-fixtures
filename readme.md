@@ -144,6 +144,10 @@ You can initialize concrete dispatcher by dependency and then access predefined 
 
 ## Change Log
 
+2.0.0 (2021-01-28)
+
+- upgrade to PHP8 + uow fuel v2.0 usage
+
 1.2.0 (2021-12-02) **BREAKING CHANGE**
 
 - Refactor - added Config for Factory Dependency as amount of it grows up to quickly

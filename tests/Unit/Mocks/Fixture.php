@@ -28,6 +28,10 @@ final class Fixture extends Factory
         return [
             'fake' => static function (ModelImitation $model, array $attributes = []) {
                 $model->body = 'fake';
+                $model->status = 'status from fake';
+            },
+            'fake2' => static function (ModelImitation $model, array $attributes = []) {
+                $model->body = 'fake2';
             },
             'factory' => ['relation', $this],
             'factory_reference' => $this->reference('relation', Fixture::class),

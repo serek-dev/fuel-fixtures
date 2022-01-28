@@ -5,7 +5,7 @@
     "require": {
         "php": "7.4.* || 8.*",
         "fzaninotto/faker": "^1.9",
-        "stwarog/uow-fuel": "^1.4.0",
+        "stwarog/uow-fuel": "^2.0.0",
         "psr/event-dispatcher": "^1.0",
         "psr/container": "^2.0 || ^1.1.0"
     },
